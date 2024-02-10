@@ -35,7 +35,6 @@
 
         private static float ParseValue(string input)
         {
-            // Remove any non-numeric characters (such as 'kg/ha', '%', etc.) and parse the numeric value
             string numericValue = new string(input.Where(c => Char.IsDigit(c) || c == '.').ToArray());
             return float.Parse(numericValue);
         }
