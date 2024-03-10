@@ -31,7 +31,7 @@
             return (potassium, phosphorus, nitrogen);
         }
 
-
+        //Helper for Parsing Value
 
         private static float ParseValue(string input)
         {
