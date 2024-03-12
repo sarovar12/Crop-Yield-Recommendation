@@ -1,11 +1,13 @@
 ﻿using Course.Backend.Model;
 using Course.Backend.Services.CourseServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Course.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class CoursesController : ControllerBase
     {
         private readonly ICourseServices _courseServices;

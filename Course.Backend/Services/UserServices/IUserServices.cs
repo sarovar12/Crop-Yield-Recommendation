@@ -5,7 +5,7 @@ namespace Course.Backend.Services.UserServices
 {
     public interface IUserServices
     {
-        Task<User> Login(string username, string password);
-        Task<bool> Register(LoginRequestDTO loginRequestDTO);
+        Task<string> Login(LoginRequestDTO loginRequestDTO);
+        Task<bool> Register(User user);
     }
 }
