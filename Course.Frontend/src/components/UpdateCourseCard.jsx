@@ -1,30 +1,42 @@
 import { useState } from 'react';
-import { addCourse } from '../../api/CourseAPI';
+import { fetchCourseById, updateCourse } from '../../api/CourseAPI';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { useQuery } from 'react-query';
+import Loading from './Loading';
 
-function AddCourseCard({ isOpen, onClose }) {
-  console.log('AddCourseCard');
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
+function UpdateCourseCard({
+  isOpen,
+  onClose,
+  courseId,
+  courseName,
+  courseDescription,
+}) {
   const [nameError, setNameError] = useState(false);
   const [descriptionError, setDescriptionError] = useState(false);
   const navigate = useNavigate();
+  const { data: course, isLoading } = useQuery('course', () =>
+    fetchCourseById(courseId)
+  );
+  const [name, setName] = useState(courseName);
+  const [description, setDescription] = useState(courseDescription);
 
-  const handleAdd = async () => {
+  const handleUpdate = async () => {
     if (name.length < 5 || description.length < 5) {
       setNameError(name.length < 5);
       setDescriptionError(description.length < 5);
       return;
     }
+    course.courseName = name;
+    course.courseDescription = description;
 
     try {
-      await addCourse(name, description);
-      toast.success('Successfully added a course');
+      await updateCourse(course);
+      toast.success('Successfully updated the course');
       onClose();
       navigate('/');
     } catch {
-      toast.error('Unable to Post request');
+      toast.error('Unable to update the course');
     }
   };
 
@@ -40,10 +52,12 @@ function AddCourseCard({ isOpen, onClose }) {
 
   return (
     <>
-      {isOpen && (
+      {isLoading ? (
+        <Loading />
+      ) : (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-gray-500 bg-opacity-75">
           <div className="bg-white w-1/2 p-6 rounded-lg shadow-xl">
-            <h2 className="text-xl font-bold mb-4">Add Course</h2>
+            <h2 className="text-xl font-bold mb-4">Update Course</h2>
             <form>
               <div className="mb-4">
                 <label
@@ -100,10 +114,10 @@ function AddCourseCard({ isOpen, onClose }) {
                 </button>
                 <button
                   type="button"
-                  onClick={handleAdd}
+                  onClick={handleUpdate}
                   className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
                 >
-                  Add
+                  Update
                 </button>
               </div>
             </form>
@@ -114,4 +128,4 @@ function AddCourseCard({ isOpen, onClose }) {
   );
 }
 
-export default AddCourseCard;
+export default UpdateCourseCard;

@@ -3,7 +3,6 @@ import axios from 'axios';
 function axiosClient() {
   // Retrieve JWT token from cookie
   const token = getCookie('LoginUser');
-  console.log(token);
 
   // Create Axios instance with token in headers
   return axios.create({
@@ -29,11 +28,28 @@ export async function fetchCourses() {
   return data;
 }
 
+export async function fetchCourseById(id) {
+  const response = await axiosClient().get(`/${id}`);
+  const data = response.data;
+  return data;
+}
+
 export async function addCourse(courseName, courseDescription) {
   const response = await axiosClient().post('', {
     courseName,
     courseDescription,
   });
+  const data = response.data;
+  return data;
+}
+export async function updateCourse(course) {
+  const response = await axiosClient().put(`/${course.courseId}`, course);
+  const data = response.data;
+  return data;
+}
+
+export async function deleteCourse(courseId) {
+  const response = await axiosClient().delete(`/${courseId}`);
   const data = response.data;
   return data;
 }

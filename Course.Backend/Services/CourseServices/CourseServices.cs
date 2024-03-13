@@ -1,4 +1,5 @@
-﻿using Course.Backend.DBContext;
+﻿using AutoMapper;
+using Course.Backend.DBContext;
 using Course.Backend.Model;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,10 +8,12 @@ namespace Course.Backend.Services.CourseServices
     public class CourseServices : ICourseServices
     {
         private readonly DatabaseContext _db;
+        private readonly IMapper _mapper;
 
-        public CourseServices(DatabaseContext db)
+        public CourseServices(DatabaseContext db, IMapper mapper)
         {
             _db = db;
+            _mapper = mapper;
 
         }
 
@@ -33,8 +36,8 @@ namespace Course.Backend.Services.CourseServices
         {
             try
             {
-                var course = await _db.Courses.Where(course => course.CourseId == courseId && course.IsDeleted == false).FirstOrDefaultAsync();
-                if (course != null)
+                var course = await _db.Courses.Where(course => course.CourseId == courseId && course.IsDeleted == false).AsNoTracking().FirstOrDefaultAsync();
+                if (course == null)
                 {
                     return false;
                 }
@@ -71,12 +74,12 @@ namespace Course.Backend.Services.CourseServices
         {
             try
             {
-                var courseById = await _db.Courses.Where(course => course.CourseId == courseId && course.IsDeleted == false).FirstOrDefaultAsync();
-                if (course != null)
+                var courseById = await _db.Courses.Where(course => course.CourseId == courseId && course.IsDeleted == false).AsNoTracking().FirstOrDefaultAsync();
+                if (course == null || courseById == null)
                 {
                     return false;
                 }
-                _db.Courses.Update(courseById);
+                _db.Courses.Update(course);
                 await _db.SaveChangesAsync();
                 return true;
 
