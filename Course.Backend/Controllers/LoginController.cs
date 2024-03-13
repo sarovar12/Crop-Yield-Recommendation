@@ -2,6 +2,7 @@
 using Course.Backend.Model.DTO;
 using Course.Backend.Services.UserServices;
 using Microsoft.AspNetCore.Mvc;
+using static Course.Backend.Helper.Common;
 
 namespace Course.Backend.Controllers
 {
@@ -20,12 +21,17 @@ namespace Course.Backend.Controllers
         public async Task<ActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
             var user = await _userServices.Login(loginRequestDTO);
-            if (user == null)
+            var serviceResult = new ServiceResult();
+            if (user.Succeed == false)
             {
-                return NotFound();
+                serviceResult.Error = user.Error;
+                serviceResult.Data = null;
+                serviceResult.Succeed = false;
+                return Ok(serviceResult);
             }
             else
             {
+                serviceResult.Data = user.Data;
                 return Ok(user);
             }
 

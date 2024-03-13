@@ -1,21 +1,12 @@
-// ProtectedRoute.jsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import Cookies from 'js-cookie';
 
 function ProtectedRoute() {
-  const [loggedIn, setLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const checkAuthentication = () => {
-      const loggedIn = Cookies.get('LoginCredentials');
-      if (loggedIn) {
-        setLoggedIn(true);
-      }
-    };
-
-    checkAuthentication();
-  }, []);
+  const [loggedIn] = useState(() => {
+    const loginVariable = Cookies.get('LoginUser');
+    return !!loginVariable; // Convert to boolean
+  });
 
   return loggedIn ? <Outlet /> : <Navigate to="/login" />;
 }

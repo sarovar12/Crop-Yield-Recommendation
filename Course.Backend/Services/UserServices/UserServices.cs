@@ -10,6 +10,7 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using static Course.Backend.Helper.Common;
 
 
 namespace Course.Backend.Services.UserServices
@@ -42,15 +43,26 @@ namespace Course.Backend.Services.UserServices
             }
  
         }
-        public async Task<string> Login(LoginRequestDTO loginRequestDTO)
+        public async Task<ServiceResult> Login(LoginRequestDTO loginRequestDTO)
         {
+            var serviceResult = new ServiceResult();
             try
             {
                 var user = await _db.Users.Where(user => user.EmailAddress == loginRequestDTO.EmailAddress).FirstOrDefaultAsync();
-                bool isPasswordCorrect = PasswordHashing.VerifyPassword(loginRequestDTO.Password, user.Password);
-                if (user == null && !isPasswordCorrect)
+                if(user == null)
                 {
-                    return "Invalid Email or Password";
+                    serviceResult.Data = null;
+                    serviceResult.Error = "User could not be found";
+                    serviceResult.Succeed = false;
+                    return serviceResult;
+                }
+                bool isPasswordCorrect = PasswordHashing.VerifyPassword(loginRequestDTO.Password, user.Password);
+                if (!isPasswordCorrect)
+                {
+                    serviceResult.Data = null;
+                    serviceResult.Error = "Incorrect Password";
+                    serviceResult.Succeed = false;
+                    return serviceResult;
                 }
                 var tokenHandler = new JwtSecurityTokenHandler();
                 var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtOptions:Secret"));
@@ -73,7 +85,9 @@ namespace Course.Backend.Services.UserServices
 
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-                return tokenHandler.WriteToken(token);
+                
+                serviceResult.Data = tokenHandler.WriteToken(token);
+                return serviceResult;
 
             }
             catch(Exception ex)
