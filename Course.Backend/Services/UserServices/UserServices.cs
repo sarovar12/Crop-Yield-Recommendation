@@ -68,8 +68,8 @@ namespace Course.Backend.Services.UserServices
                 var key = Encoding.ASCII.GetBytes(_configuration.GetValue<string>("JwtOptions:Secret"));
                 var claims = new List<Claim>
             {
-                new Claim("Email",user.Username.ToString()),
-                new Claim("Username",user.EmailAddress.ToString()),
+                new Claim("Email",user.EmailAddress.ToString()),
+                new Claim("Username",user.Username.ToString()),
             };
 
                 var audience = _configuration.GetValue<string>("JwtOptions:Audience");

@@ -1,4 +1,5 @@
 ﻿using Course.Backend.Model;
+using Course.Backend.Model.DTO;
 using Course.Backend.Services.CourseServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -54,11 +55,16 @@ namespace Course.Backend.Controllers
 
 
         [HttpPost]
-        public async Task<ActionResult> AddCourse([FromBody] CourseLesson courseLesson)
+        public async Task<ActionResult> AddCourse([FromBody] CourseRequestDTO courseLesson)
         {
+            var courseModel = new CourseLesson()
+            {
+                CourseName = courseLesson.CourseName,   
+                CourseDescription = courseLesson.CourseDescription,
+            };
             try
             {
-                bool course = await _courseServices.CreateCourse(courseLesson);
+                bool course = await _courseServices.CreateCourse(courseModel);
                 if (course == false)
                 {
                     return BadRequest("Course could not be created");
