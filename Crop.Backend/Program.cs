@@ -1,5 +1,7 @@
 using Crop.Backend.DBContext;
 using Crop.Backend.Services.CourseServices;
+using Crop.Backend.Services.MLService;
+using Crop.Backend.Services.NAARCApiService;
 using Crop.Backend.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -65,6 +67,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ICourseServices, CourseServices>();
+builder.Services.AddScoped<IMLServices, MLService>();
+builder.Services.AddScoped<INarcService,NarcService>();
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
 var app = builder.Build();
 

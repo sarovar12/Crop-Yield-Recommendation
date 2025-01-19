@@ -1,11 +1,13 @@
-﻿using Crop.Backend.Model.DTO;
+﻿using Crop.Backend.Helper;
+using Crop.Backend.Model.DTO;
+using Crop.Backend.Services.NAARCApiService;
 using Python.Runtime;
 
 namespace Crop.Backend.Services.MLService
 {
-    public class MLService : IMLServices
+    public class MLService(INarcService narcService) : IMLServices
     {
-        public async Task<dynamic> GetCropRecommendationAsync(CropRecommendationRequestDTO cropRecommendationRequestDTO)
+        public async Task<dynamic> CropRecommendationService(CropRecommendationRequestDTO cropRecommendationRequestDTO)
         {
             return await Task.Run(() =>
             {
@@ -51,6 +53,44 @@ namespace Crop.Backend.Services.MLService
                     PythonEngine.Shutdown();
                 }
             });
+        }
+
+        public Task<dynamic> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationRequestDTO)
+        {
+
+            throw new NotImplementedException();
+        }
+
+        public async Task<CropRecommendationByLocationResponseDTO> GetCropRecommendationByLocation(CropRecommendationByLocationRequestDTO cropRecommendationRequestDTO)
+        {
+            var soilContentRequest = new SoilDataRequestModel()
+            {
+                Latitude = cropRecommendationRequestDTO.Latitude,
+                Longitude = cropRecommendationRequestDTO.Longitude,
+            };
+
+            var soilContent = await narcService.NarcSoilContentService(soilContentRequest);
+
+            var mappedSoilContentData = NutrientConverterHelper.ConvertNutrients(soilContent.Potassium, soilContent.P2O5, soilContent.TotalNitrogen);
+            var cropRecommendationRequest = new CropRecommendationRequestDTO()
+            {
+                Nitrogen = mappedSoilContentData.nitrogen,
+                Phosphorus = mappedSoilContentData.phosphorus,
+                Potassium = mappedSoilContentData.phosphorus,
+                PhValue = soilContent.Ph,
+            };
+
+            var cropRecommendation = await CropRecommendationService(cropRecommendationRequest);
+            var response = new CropRecommendationByLocationResponseDTO()
+            {
+                RecommendationMessage = cropRecommendation.RandomForestRecommendation,
+                Nitrogen = soilContent.TotalNitrogen,
+                Phosphorus = soilContent.P2O5
+            };
+
+            return response;
+
+            throw new NotImplementedException();
         }
     }
 }

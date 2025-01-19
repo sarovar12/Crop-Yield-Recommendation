@@ -4,5 +4,9 @@ namespace Crop.Backend.Services.MLService;
 
 public interface IMLServices
 {
-    Task<dynamic> GetCropRecommendationAsync(CropRecommendationRequestDTO cropRecommendationRequestDTO);
+    Task<dynamic> CropRecommendationService(CropRecommendationRequestDTO cropRecommendationRequestDTO);
+    Task<dynamic> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationRequestDTO);
+
+    Task<CropRecommendationByLocationResponseDTO> GetCropRecommendationByLocation(CropRecommendationByLocationRequestDTO cropRecommendationRequestDTO);
+
 }

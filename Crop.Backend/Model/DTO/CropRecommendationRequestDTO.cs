@@ -11,3 +11,17 @@ public class CropRecommendationRequestDTO
     public float Rainfall { get; set; }
 
 }
+
+public class CropRecommendationByLocationRequestDTO
+{
+    public float Latitude { get; set; }
+    public float Longitude { get; set; }
+}
+
+public class CropRecommendationByLocationResponseDTO
+{
+    public string RecommendationMessage { get; set; }
+    public string Nitrogen { get; set; }
+    public string Phosphorus { get; set; }
+    public string PhValue { get; set; }
+}
