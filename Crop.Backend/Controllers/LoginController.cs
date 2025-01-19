@@ -1,10 +1,10 @@
-﻿using Course.Backend.Model;
-using Course.Backend.Model.DTO;
-using Course.Backend.Services.UserServices;
+﻿using Crop.Backend.Model;
+using Crop.Backend.Model.DTO;
+using Crop.Backend.Services.UserServices;
 using Microsoft.AspNetCore.Mvc;
-using static Course.Backend.Helper.Common;
+using static Crop.Backend.Helper.Common;
 
-namespace Course.Backend.Controllers
+namespace Crop.Backend.Controllers
 {
     [ApiController]
 

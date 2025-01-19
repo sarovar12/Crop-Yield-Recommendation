@@ -1,7 +1,7 @@
-﻿using Course.Backend.DBContext;
-using Course.Backend.Helper;
-using Course.Backend.Model;
-using Course.Backend.Model.DTO;
+﻿using Crop.Backend.DBContext;
+using Crop.Backend.Helper;
+using Crop.Backend.Model;
+using Crop.Backend.Model.DTO;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +10,10 @@ using System.Data;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using static Course.Backend.Helper.Common;
+using static Crop.Backend.Helper.Common;
 
 
-namespace Course.Backend.Services.UserServices
+namespace Crop.Backend.Services.UserServices
 {
     public class UserServices : IUserServices
     {
@@ -37,11 +37,11 @@ namespace Course.Backend.Services.UserServices
                 return true;
 
             }
-            catch(Exception ex) 
+            catch (Exception ex)
             {
                 return false;
             }
- 
+
         }
         public async Task<ServiceResult> Login(LoginRequestDTO loginRequestDTO)
         {
@@ -49,7 +49,7 @@ namespace Course.Backend.Services.UserServices
             try
             {
                 var user = await _db.Users.Where(user => user.EmailAddress == loginRequestDTO.EmailAddress).FirstOrDefaultAsync();
-                if(user == null)
+                if (user == null)
                 {
                     serviceResult.Data = null;
                     serviceResult.Error = "User could not be found";
@@ -77,7 +77,7 @@ namespace Course.Backend.Services.UserServices
 
                 var tokenDescriptor = new SecurityTokenDescriptor
                 {
-                    Audience =audience,
+                    Audience = audience,
                     Issuer = issuer,
                     Subject = new ClaimsIdentity(claims),
                     Expires = DateTime.UtcNow.AddDays(7),
@@ -85,12 +85,12 @@ namespace Course.Backend.Services.UserServices
 
                 };
                 var token = tokenHandler.CreateToken(tokenDescriptor);
-                
+
                 serviceResult.Data = tokenHandler.WriteToken(token);
                 return serviceResult;
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
 
@@ -100,5 +100,5 @@ namespace Course.Backend.Services.UserServices
         }
 
 
-     }
+    }
 }

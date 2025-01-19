@@ -1,4 +1,4 @@
-﻿namespace Course.Backend.Helper
+﻿namespace Crop.Backend.Helper
 {
     public class Common
     {
@@ -9,6 +9,6 @@
             public string Error { get; set; } = null;
 
         }
-       
+
     }
 }

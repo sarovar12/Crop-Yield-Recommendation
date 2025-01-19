@@ -1,4 +1,4 @@
-﻿namespace Course.Backend.Model.DTO
+﻿namespace Crop.Backend.Model.DTO
 {
     public class CourseResponseDTO
     {

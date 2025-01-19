@@ -1,9 +1,8 @@
-﻿
-using Course.Backend.Model;
-using Course.Backend.Model.DTO;
-using static Course.Backend.Helper.Common;
+﻿using Crop.Backend.Model;
+using Crop.Backend.Model.DTO;
+using static Crop.Backend.Helper.Common;
 
-namespace Course.Backend.Services.UserServices
+namespace Crop.Backend.Services.UserServices
 {
     public interface IUserServices
     {

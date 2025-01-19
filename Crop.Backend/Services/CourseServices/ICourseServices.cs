@@ -1,6 +1,6 @@
-﻿using Course.Backend.Model;
+﻿using Crop.Backend.Model;
 
-namespace Course.Backend.Services.CourseServices
+namespace Crop.Backend.Services.CourseServices
 {
     public interface ICourseServices
     {
@@ -8,6 +8,6 @@ namespace Course.Backend.Services.CourseServices
         Task<CourseLesson?> GetCourseById(int courseId);
         Task<bool> CreateCourse(CourseLesson course);
         Task<bool> DeleteCourse(int courseId);
-        Task<bool> UpdateCourse(CourseLesson course,int courseId);
+        Task<bool> UpdateCourse(CourseLesson course, int courseId);
     }
 }

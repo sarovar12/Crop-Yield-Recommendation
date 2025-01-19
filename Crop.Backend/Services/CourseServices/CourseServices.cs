@@ -1,9 +1,9 @@
 ﻿using AutoMapper;
-using Course.Backend.DBContext;
-using Course.Backend.Model;
+using Crop.Backend.DBContext;
+using Crop.Backend.Model;
 using Microsoft.EntityFrameworkCore;
 
-namespace Course.Backend.Services.CourseServices
+namespace Crop.Backend.Services.CourseServices
 {
     public class CourseServices : ICourseServices
     {
@@ -56,18 +56,18 @@ namespace Course.Backend.Services.CourseServices
 
         public async Task<CourseLesson?> GetCourseById(int courseId)
         {
-           var course = await _db.Courses.Where(course=>course.CourseId == courseId && course.IsDeleted == false).FirstOrDefaultAsync();
-           if(course != null)
+            var course = await _db.Courses.Where(course => course.CourseId == courseId && course.IsDeleted == false).FirstOrDefaultAsync();
+            if (course != null)
             {
                 return course;
             }
-           return null;
+            return null;
         }
 
         public async Task<List<CourseLesson>> GetCourses()
         {
             return await _db.Courses.Where(course => course.IsDeleted == false).ToListAsync();
-            
+
         }
 
         public async Task<bool> UpdateCourse(CourseLesson course, int courseId)

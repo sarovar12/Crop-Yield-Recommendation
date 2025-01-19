@@ -1,4 +1,4 @@
-﻿namespace Course.Backend.Model.DTO
+﻿namespace Crop.Backend.Model.DTO
 {
     public class LoginRequestDTO
     {
@@ -6,4 +6,3 @@
         public string Password { get; set; }
     }
 }
-    

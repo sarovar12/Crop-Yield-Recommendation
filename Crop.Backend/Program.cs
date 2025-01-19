@@ -1,6 +1,6 @@
-using Course.Backend.DBContext;
-using Course.Backend.Services.CourseServices;
-using Course.Backend.Services.UserServices;
+using Crop.Backend.DBContext;
+using Crop.Backend.Services.CourseServices;
+using Crop.Backend.Services.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;

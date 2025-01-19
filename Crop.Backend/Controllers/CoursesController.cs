@@ -1,10 +1,10 @@
-﻿using Course.Backend.Model;
-using Course.Backend.Model.DTO;
-using Course.Backend.Services.CourseServices;
+﻿using Crop.Backend.Model;
+using Crop.Backend.Model.DTO;
+using Crop.Backend.Services.CourseServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Course.Backend.Controllers
+namespace Crop.Backend.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
@@ -15,7 +15,7 @@ namespace Course.Backend.Controllers
         public CoursesController(ICourseServices courseServices)
         {
             _courseServices = courseServices;
-            
+
         }
 
         [HttpGet]
@@ -30,7 +30,7 @@ namespace Course.Backend.Controllers
             {
                 return BadRequest("Could not process request");
             }
- 
+
         }
 
         [HttpGet]
@@ -40,7 +40,7 @@ namespace Course.Backend.Controllers
             try
             {
                 var course = await _courseServices.GetCourseById(courseId);
-                if(course == null)
+                if (course == null)
                 {
                     return NotFound("Course could not be found");
                 }
@@ -59,7 +59,7 @@ namespace Course.Backend.Controllers
         {
             var courseModel = new CourseLesson()
             {
-                CourseName = courseLesson.CourseName,   
+                CourseName = courseLesson.CourseName,
                 CourseDescription = courseLesson.CourseDescription,
             };
             try
@@ -84,7 +84,7 @@ namespace Course.Backend.Controllers
         {
             try
             {
-                bool course = await _courseServices.UpdateCourse(courseLesson,courseId);
+                bool course = await _courseServices.UpdateCourse(courseLesson, courseId);
                 if (course == false)
                 {
                     return BadRequest("Course could not be updated");

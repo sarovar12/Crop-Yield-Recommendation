@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Course.Backend.Model
+namespace Crop.Backend.Model
 {
     public class User
     {
@@ -12,6 +12,6 @@ namespace Course.Backend.Model
         public string Password { get; set; }
 
         [Required]
-        public string Username {  get; set; }
+        public string Username { get; set; }
     }
 }
