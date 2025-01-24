@@ -24,7 +24,7 @@ namespace Crop.Backend.Controllers
             var testModel = new CropRecommendationByLocationRequestDTO()
             {
 
-                Latitude = 26.626f,
+                Latitude = 86.626f,
                 Longitude = 87.873f
             };
             var result = await mlServices.GetCropRecommendationByLocation(testModel);

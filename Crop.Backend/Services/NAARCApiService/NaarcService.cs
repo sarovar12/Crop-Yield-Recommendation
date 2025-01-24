@@ -31,17 +31,17 @@ public class NarcService : INarcService
                 {
                     return soilDataResponse;
                 }
-                throw new Exception("Request Error: " + soilDataResponse.Result);
+                throw new ArgumentException("Request Error: " + soilDataResponse.Result);
                 //var result = JsonConvert.DeserializeObject<SoilDataResponseModel>(soilDataResponse.Result);
 
             }
             catch (HttpRequestException ex)
             {
-                throw new Exception("Request error: " + ex.Message);
+                throw new ArgumentException("Request error: " + ex.Message);
             }
             catch (Exception ex)
             {
-                throw new Exception("An error occurred: " + ex.Message);
+                throw new ArgumentException("An error occurred: " + ex.Message);
             }
         }
     }

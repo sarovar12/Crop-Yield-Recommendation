@@ -55,7 +55,7 @@ namespace Crop.Backend.Services.MLService
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception($"Error calling Python script: {ex.Message}");
+                    throw new ArgumentException($"Error calling Python script: {ex.Message}");
                 }
 
             });

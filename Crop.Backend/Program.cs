@@ -1,4 +1,5 @@
 using Crop.Backend.DBContext;
+using Crop.Backend.Filters;
 using Crop.Backend.Services.CourseServices;
 using Crop.Backend.Services.MLService;
 using Crop.Backend.Services.NAARCApiService;
@@ -68,8 +69,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ICourseServices, CourseServices>();
 builder.Services.AddScoped<IMLServices, MLService>();
-builder.Services.AddScoped<INarcService,NarcService>();
+builder.Services.AddScoped<INarcService, NarcService>();
+builder.Services.AddControllers(options =>
+        options.Filters.Add<ArgumentExceptionHandler>())
+    .AddJsonOptions(options => { options.JsonSerializerOptions.PropertyNamingPolicy = null; });
 builder.Services.AddAutoMapper(typeof(Program).Assembly);
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
