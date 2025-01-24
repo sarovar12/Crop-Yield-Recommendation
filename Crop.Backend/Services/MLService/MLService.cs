@@ -1,7 +1,9 @@
 ﻿using Crop.Backend.Helper;
+using Crop.Backend.Model;
 using Crop.Backend.Model.DTO;
 using Crop.Backend.Services.NAARCApiService;
 using Python.Runtime;
+using System;
 
 namespace Crop.Backend.Services.MLService
 {
@@ -12,6 +14,8 @@ namespace Crop.Backend.Services.MLService
             return await Task.Run(() =>
             {
                 // Initialize Python.NET
+                //Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", @"C:\Python311\DLLs\python38.dll");
+                Runtime.PythonDLL = @"C:\Users\ASUS\AppData\Local\Programs\Python\Python313\python313.dll";
                 PythonEngine.Initialize();
 
                 try
@@ -19,6 +23,11 @@ namespace Crop.Backend.Services.MLService
                     using (Py.GIL())
                     {
                         // Load the Python script
+                        dynamic sys = Py.Import("sys");
+                        //dynamic pd = Py.Import("pandas");
+                        Console.WriteLine("Python version: " + sys.version);
+                        // Add the directory containing the Python script to sys.path
+                        sys.path.append(@"D:\ProjectsB\CropYieldRecommendation\Crop.Backend\Services\MLService");
                         dynamic py = Py.Import("crop_recommendation");
 
                         // Create a dictionary for input parameters
@@ -48,17 +57,14 @@ namespace Crop.Backend.Services.MLService
                 {
                     throw new Exception($"Error calling Python script: {ex.Message}");
                 }
-                finally
-                {
-                    PythonEngine.Shutdown();
-                }
+
             });
         }
 
-        public Task<dynamic> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationRequestDTO)
+        public async Task<dynamic> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationRequestDTO)
         {
-
-            throw new NotImplementedException();
+            var result = await CropRecommendationService(cropRecommendationRequestDTO);
+            return result;
         }
 
         public async Task<CropRecommendationByLocationResponseDTO> GetCropRecommendationByLocation(CropRecommendationByLocationRequestDTO cropRecommendationRequestDTO)
@@ -71,26 +77,29 @@ namespace Crop.Backend.Services.MLService
 
             var soilContent = await narcService.NarcSoilContentService(soilContentRequest);
 
-            var mappedSoilContentData = NutrientConverterHelper.ConvertNutrients(soilContent.Potassium, soilContent.P2O5, soilContent.TotalNitrogen);
+            var (potassium, phosphorus, nitrogen) = NutrientConverterHelper.ConvertNutrients(soilContent.Potassium, soilContent.P2O5, soilContent.TotalNitrogen);
             var cropRecommendationRequest = new CropRecommendationRequestDTO()
             {
-                Nitrogen = mappedSoilContentData.nitrogen,
-                Phosphorus = mappedSoilContentData.phosphorus,
-                Potassium = mappedSoilContentData.phosphorus,
+                Nitrogen = nitrogen,
+                Phosphorus = phosphorus,
+                Potassium = potassium,
                 PhValue = soilContent.Ph,
+                Humidity = 60.0f,
+                Temperature = 20.9f,
+                Rainfall = 200.9f
             };
 
             var cropRecommendation = await CropRecommendationService(cropRecommendationRequest);
             var response = new CropRecommendationByLocationResponseDTO()
             {
-                RecommendationMessage = cropRecommendation.RandomForestRecommendation,
+                RecommendationMessage = $"Random Forest:{cropRecommendation.RandomForestRecommendation} and " +
+                $"Gradient Boosting:{cropRecommendation.GradientBoostingRecommendation}",
                 Nitrogen = soilContent.TotalNitrogen,
                 Phosphorus = soilContent.P2O5
             };
 
             return response;
 
-            throw new NotImplementedException();
         }
     }
 }

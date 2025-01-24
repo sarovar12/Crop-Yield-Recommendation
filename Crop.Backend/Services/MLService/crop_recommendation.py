@@ -2,8 +2,10 @@
 import joblib
 import os
 
+# Absolute path to the directory containing trained models
+models_dir = r'D:\ProjectsB\CropYieldRecommendation\Crop.Backend\Services\MLService\trained_models'
+
 # Load the trained models
-models_dir = 'trained_models'
 rf_model = joblib.load(os.path.join(models_dir, 'random_forest_model.joblib'))
 gb_model = joblib.load(os.path.join(models_dir, 'gradient_boosting_model.joblib'))
 

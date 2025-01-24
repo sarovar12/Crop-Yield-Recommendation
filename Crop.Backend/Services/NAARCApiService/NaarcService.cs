@@ -5,13 +5,13 @@ namespace Crop.Backend.Services.NAARCApiService;
 
 public interface INarcService
 {
-    Task<SoilDataResponseModel> NarcSoilContentService(SoilDataRequestModel soilDataRequestModel);
+    Task<NarcResponseModel> NarcSoilContentService(SoilDataRequestModel soilDataRequestModel);
 }
 
 public class NarcService : INarcService
 
 {
-    public async Task<SoilDataResponseModel> NarcSoilContentService(SoilDataRequestModel soilDataRequestModel)
+    public async Task<NarcResponseModel> NarcSoilContentService(SoilDataRequestModel soilDataRequestModel)
     {
 
         var url = $"https://soil.narc.gov.np/soil/soildata/?lon={soilDataRequestModel.Longitude}&lat={soilDataRequestModel.Latitude}";
@@ -26,9 +26,14 @@ public class NarcService : INarcService
                 response.EnsureSuccessStatusCode();
 
                 var json = await response.Content.ReadAsStringAsync();
-                var soilDataResponse = JsonConvert.DeserializeObject<SoilDataResponseModel>(json);
+                var soilDataResponse = JsonConvert.DeserializeObject<NarcResponseModel>(json);
+                if (soilDataResponse is not null && soilDataResponse.Result is null)
+                {
+                    return soilDataResponse;
+                }
+                throw new Exception("Request Error: " + soilDataResponse.Result);
+                //var result = JsonConvert.DeserializeObject<SoilDataResponseModel>(soilDataResponse.Result);
 
-                return soilDataResponse;
             }
             catch (HttpRequestException ex)
             {

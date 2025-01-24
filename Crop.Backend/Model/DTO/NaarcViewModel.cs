@@ -1,4 +1,6 @@
-﻿namespace Crop.Backend.Model.DTO;
+﻿using Newtonsoft.Json;
+
+namespace Crop.Backend.Model.DTO;
 
 public class SoilDataRequestModel
 {
@@ -7,10 +9,32 @@ public class SoilDataRequestModel
 }
 
 
+public class NarcResponseModel
+{
+    [JsonProperty("coord")]
+    public Coord Coord { get; set; }
+    public string ParentSoil { get; set; }
+    public float Ph { get; set; }
+    public string Clay { get; set; }
+
+    [JsonProperty("organic_matter")]
+    public string OrganicMatter { get; set; }
+
+    [JsonProperty("total_nitrogen")]
+    public string TotalNitrogen { get; set; }
+    public string Boron { get; set; }
+    public string P2O5 { get; set; }
+    public string Sand { get; set; }
+    public string Zinc { get; set; }
+    public string Potassium { get; set; }
+
+    [JsonProperty("result")]
+    public string Result {  get; set; }
+}
 
 public class SoilDataResponseModel
 {
-    public Coord Coord { get; set; }
+    //public Coord Coord { get; set; }
     public string ParentSoil { get; set; }
     public float Ph { get; set; }
     public string Clay { get; set; }
