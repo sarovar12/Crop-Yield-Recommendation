@@ -18,14 +18,20 @@ function Login() {
 
   async function handleLogin(e) {
     e.preventDefault();
-
-    const token = await LoginUser(email, password);
-    if (token.succeed) {
-      Cookies.set('LoginUser', token.data);
-      navigate('/');
-      toast.success('User Logged in Successfully');
-    } else {
-      setError(token.error);
+    try {
+      const token = await LoginUser(email, password);
+      console.log(token);
+      if (token.succeed) {
+        Cookies.set('LoginUser', token.data);
+        console.log(token.data);
+        navigate('/');
+        toast.success('User Logged in Successfully');
+      } else {
+        setError(token.error); // Ensure `token.error` exists in failed responses.
+      }
+    } catch (err) {
+      console.error('Login failed:', err);
+      setError('An unexpected error occurred. Please try again.');
     }
   }
 

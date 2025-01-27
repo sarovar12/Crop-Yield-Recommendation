@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import MapLeaflet from './MapLeaflet';
 
-function Dashboard() {
-  const [location, setLocation] = useState('Kathmandu');
-  const [cropType, setCropType] = useState('Sugarcane');
+function LocationPrediction() {
+  const [location, setLocation] = useState('');
+  const [cropType, setCropType] = useState('');
   const [nitrogen, setNitrogen] = useState('');
   const [phosphorus, setPhosphorus] = useState('');
   const [potassium, setPotassium] = useState('');
@@ -26,8 +27,8 @@ function Dashboard() {
   };
 
   const handleReset = () => {
-    setLocation('Kathmandu');
-    setCropType('Sugarcane');
+    setLocation('');
+    setCropType('');
     setNitrogen('');
     setPhosphorus('');
     setPotassium('');
@@ -46,27 +47,28 @@ function Dashboard() {
         <nav className="mt-8">
           <ul className="space-y-4">
             <li>
-              <a
-                href="#home"
+              <Link
+                to="/"
                 className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300"
               >
                 Home
-              </a>
+              </Link>
             </li>
             <li>
-              <a
-                href="#input"
+              <Link
+                to="/"
                 className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300"
               >
                 Input Data
-              </a>
+              </Link>
             </li>
             <li>
-              <a className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300">
-                <Link to="/crop-recommendation">
-                  Location-based Crop Recommendation
-                </Link>
-              </a>
+              <Link
+                to="/crop-recommendation"
+                className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300"
+              >
+                Location-based Crop Yield Prediction
+              </Link>
             </li>
           </ul>
         </nav>
@@ -74,29 +76,44 @@ function Dashboard() {
 
       {/* Main Content */}
       <main className="ml-64 w-full p-8">
-        {/* Home Section */}
-        <div id="home" className="p-8 bg-white rounded-lg shadow-lg mb-6">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            Dashboard
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-indigo-100 p-6 rounded-lg shadow-lg hover:bg-indigo-200 transition-all duration-300 ease-in-out">
-              <h2 className="font-semibold text-lg">Weather Overview</h2>
-              <p className="text-gray-700">Current weather: Sunny, 25°C</p>
-              <p className="text-gray-700">Forecast: Rain expected in 2 days</p>
-            </div>
-            <div className="bg-green-100 p-6 rounded-lg shadow-lg hover:bg-green-200 transition-all duration-300 ease-in-out">
-              <h2 className="font-semibold text-lg">Soil Condition</h2>
-              <p className="text-gray-700">pH Level: 6.5</p>
-              <p className="text-gray-700">Moisture: 45%</p>
-            </div>
-          </div>
-        </div>
+          <MapLeaflet />
 
-        {/* Input Data Section */}
-        <div id="input" className="p-8 bg-white rounded-lg shadow-lg mb-6">
-          <h1 className="text-3xl font-bold text-gray-800 mb-6">Input Data</h1>
-          <form id="inputForm" onSubmit={handleSubmit} className="space-y-6">
+        {/* Location Prediction Section */}
+        <div className="p-8 bg-white rounded-lg shadow-lg mb-6">
+          <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+            Location-based Crop Yield Prediction
+          </h1>
+
+          {/* <form id="inputForm" onSubmit={handleSubmit} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Location:
+                </label>
+                <input
+                  type="text"
+                  id="location"
+                  name="location"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">
+                  Crop Type:
+                </label>
+                <input
+                  type="text"
+                  id="cropType"
+                  name="cropType"
+                  value={cropType}
+                  onChange={(e) => setCropType(e.target.value)}
+                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="block text-sm font-medium text-gray-700">
@@ -200,11 +217,11 @@ function Dashboard() {
                 Reset
               </button>
             </div>
-          </form>
+          </form> */}
         </div>
       </main>
     </div>
   );
 }
 
-export default Dashboard;
+export default LocationPrediction;
