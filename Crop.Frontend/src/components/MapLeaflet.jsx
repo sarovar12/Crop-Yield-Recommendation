@@ -12,7 +12,7 @@ import {
   Rectangle,
 } from 'react-leaflet';
 import Loading from '../components/Loading';
-// import GeoCoding from './GeoCoding';
+import GeoCoding from './GeoCoding';
 import { ReverseGeoCoding } from './ReverseGeoCoding';
 
 // const center = [51.505, -0.09];
@@ -144,7 +144,7 @@ function MapLeaflet() {
           </Marker> */}
 
         <ReverseGeoCoding location={markerPosition} />
-        {/* <GeoCoding /> */}
+        <GeoCoding location={markerPosition} />
 
         <ScaleControl imperial={false} />
       </MapContainer>
