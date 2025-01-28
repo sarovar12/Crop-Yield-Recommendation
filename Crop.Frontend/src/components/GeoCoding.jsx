@@ -1,12 +1,11 @@
 import 'leaflet-control-geocoder/dist/Control.Geocoder.css';
 import 'leaflet-control-geocoder/dist/Control.Geocoder.js';
 import Leaflet from 'leaflet';
-import { useEffect, useRef } from 'react';
+import { useEffect } from 'react';
 import { useMap } from 'react-leaflet';
 
-export default function LeafletControlGeocoder() {
+export default function GeoCoding({ setMarkerPosition, markerRef }) {
   const map = useMap();
-  const markerRef = useRef(null);
 
   useEffect(() => {
     const geocoder = Leaflet.Control.Geocoder.nominatim();
@@ -18,29 +17,30 @@ export default function LeafletControlGeocoder() {
       geocoder,
     })
       .on('markgeocode', function (e) {
-        const { center } = e.geocode;
+        const { center, name } = e.geocode;
 
         if (!markerRef.current) {
-          // Create a new marker if it doesn't exist
+          // Create marker if it doesn't exist
           markerRef.current = Leaflet.marker(center, { draggable: true })
             .addTo(map)
-            .bindPopup(e.geocode.name)
+            .bindPopup(name)
             .openPopup();
 
           markerRef.current.on('dragend', (event) => {
             const { lat, lng } = event.target.getLatLng();
-            console.log('Marker dragged to:', lat, lng);
+            setMarkerPosition([lat, lng]);
           });
         } else {
-          // Update the existing marker
+          // Update existing marker
           markerRef.current.setLatLng(center);
-          markerRef.current.bindPopup(e.geocode.name).openPopup();
+          markerRef.current.bindPopup(name).openPopup();
         }
 
         map.fitBounds(e.geocode.bbox);
+        setMarkerPosition(center); // Update marker position
       })
       .addTo(map);
-  }, [map]);
+  }, [map, setMarkerPosition, markerRef]);
 
   return null;
 }

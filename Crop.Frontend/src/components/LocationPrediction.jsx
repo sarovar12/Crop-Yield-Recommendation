@@ -1,40 +1,37 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MapLeaflet from './MapLeaflet';
 
 function LocationPrediction() {
-  const [location, setLocation] = useState('');
-  const [cropType, setCropType] = useState('');
-  const [nitrogen, setNitrogen] = useState('');
-  const [phosphorus, setPhosphorus] = useState('');
-  const [potassium, setPotassium] = useState('');
-  const [rainfall, setRainfall] = useState('');
-  const [ph, setPh] = useState('');
-  const [temperature, setTemperature] = useState('');
+  const [markerPosition, setMarkerPosition] = useState([0, 0]);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log({
-      location,
-      cropType,
-      nitrogen,
-      phosphorus,
-      potassium,
-      rainfall,
-      ph,
-      temperature,
-    });
-  };
+  useEffect(() => {
+    console.log('Marker position updated:', markerPosition);
+    console.log(typeof markerPosition);
 
-  const handleReset = () => {
-    setLocation('');
-    setCropType('');
-    setNitrogen('');
-    setPhosphorus('');
-    setPotassium('');
-    setRainfall('');
-    setPh('');
-    setTemperature('');
+    // Ensure markerPosition is in array format [lat, lng]
+    const latLng = Array.isArray(markerPosition) // If it's an array, use it directly
+      ? markerPosition
+      : [markerPosition.lat, markerPosition.lng]; // If it's an object, extract lat and lng
+
+    console.log('Using coordinates:', latLng); // Use latLng for further logic (e.g., crop recommendations)
+  }, [markerPosition]);
+
+  const handleGenerateRecommendation = () => {
+    // Ensure markerPosition is in array format [lat, lng] before generating recommendation
+    const latLng = Array.isArray(markerPosition)
+      ? markerPosition
+      : [markerPosition.lat, markerPosition.lng];
+
+    const [lat, lon] = latLng;
+
+    if (lat && lon) {
+      alert(
+        `Generating crop recommendation for:\nLatitude: ${lat}, Longitude: ${lon}`
+      );
+    } else {
+      alert('Invalid location. Please select a valid location on the map.');
+    }
   };
 
   return (
@@ -76,148 +73,23 @@ function LocationPrediction() {
 
       {/* Main Content */}
       <main className="ml-64 w-full p-8">
-          <MapLeaflet />
+        {/* Map Section */}
+        <MapLeaflet onMarkerPositionChange={setMarkerPosition} />
 
-        {/* Location Prediction Section */}
-        <div className="p-8 bg-white rounded-lg shadow-lg mb-6">
+        {/* Generate Crop Recommendation Section */}
+        <div className="p-8 bg-white rounded-lg shadow-lg mt-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-6 text-center">
             Location-based Crop Yield Prediction
           </h1>
 
-          {/* <form id="inputForm" onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Location:
-                </label>
-                <input
-                  type="text"
-                  id="location"
-                  name="location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Crop Type:
-                </label>
-                <input
-                  type="text"
-                  id="cropType"
-                  name="cropType"
-                  value={cropType}
-                  onChange={(e) => setCropType(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Nitrogen (kg/ha):
-                </label>
-                <input
-                  type="number"
-                  id="nitrogen"
-                  name="nitrogen"
-                  value={nitrogen}
-                  onChange={(e) => setNitrogen(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Phosphorus (kg/ha):
-                </label>
-                <input
-                  type="number"
-                  id="phosphorus"
-                  name="phosphorus"
-                  value={phosphorus}
-                  onChange={(e) => setPhosphorus(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Potassium (kg/ha):
-                </label>
-                <input
-                  type="number"
-                  id="potassium"
-                  name="potassium"
-                  value={potassium}
-                  onChange={(e) => setPotassium(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Rainfall (mm):
-                </label>
-                <input
-                  type="number"
-                  id="rainfall"
-                  name="rainfall"
-                  value={rainfall}
-                  onChange={(e) => setRainfall(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  pH Level:
-                </label>
-                <input
-                  type="number"
-                  step="0.1"
-                  id="ph"
-                  name="ph"
-                  value={ph}
-                  onChange={(e) => setPh(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700">
-                  Temperature (°C):
-                </label>
-                <input
-                  type="number"
-                  id="temperature"
-                  name="temperature"
-                  value={temperature}
-                  onChange={(e) => setTemperature(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
-                />
-              </div>
-            </div>
-
-            <div className="mt-6 flex justify-between">
-              <button
-                type="submit"
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300"
-              >
-                Submit
-              </button>
-              <button
-                type="button"
-                onClick={handleReset}
-                className="px-6 py-3 bg-gray-300 text-black rounded-lg hover:bg-gray-400 transition-all duration-300"
-              >
-                Reset
-              </button>
-            </div>
-          </form> */}
+          <div className="text-center">
+            <button
+              onClick={handleGenerateRecommendation}
+              className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300"
+            >
+              Generate Crop Recommendation for This Location
+            </button>
+          </div>
         </div>
       </main>
     </div>
