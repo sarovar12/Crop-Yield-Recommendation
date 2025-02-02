@@ -1,36 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import MapLeaflet from './MapLeaflet';
+import { getRecommendationByLocatoin } from '../../api/MLAPI'; // Import the API function
 
 function LocationPrediction() {
   const [markerPosition, setMarkerPosition] = useState([0, 0]);
+  const [recommendation, setRecommendation] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     console.log('Marker position updated:', markerPosition);
-    console.log(typeof markerPosition);
-
-    // Ensure markerPosition is in array format [lat, lng]
-    const latLng = Array.isArray(markerPosition) // If it's an array, use it directly
-      ? markerPosition
-      : [markerPosition.lat, markerPosition.lng]; // If it's an object, extract lat and lng
-
-    console.log('Using coordinates:', latLng); // Use latLng for further logic (e.g., crop recommendations)
   }, [markerPosition]);
 
-  const handleGenerateRecommendation = () => {
-    // Ensure markerPosition is in array format [lat, lng] before generating recommendation
+  const handleGenerateRecommendation = async () => {
     const latLng = Array.isArray(markerPosition)
       ? markerPosition
       : [markerPosition.lat, markerPosition.lng];
 
-    const [lat, lon] = latLng;
+    const [latitude, longitude] = latLng;
 
-    if (lat && lon) {
-      alert(
-        `Generating crop recommendation for:\nLatitude: ${lat}, Longitude: ${lon}`
-      );
-    } else {
+    if (!latitude || !longitude) {
       alert('Invalid location. Please select a valid location on the map.');
+      return;
+    }
+
+    try {
+      setLoading(true);
+      setError(null);
+      const data = await getRecommendationByLocatoin(latitude, longitude);
+      setRecommendation(data);
+    } catch (err) {
+      setError('Failed to fetch recommendation. Please try again.');
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -86,10 +90,55 @@ function LocationPrediction() {
             <button
               onClick={handleGenerateRecommendation}
               className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300"
+              disabled={loading}
             >
-              Generate Crop Recommendation for This Location
+              {loading
+                ? 'Generating...'
+                : 'Generate Crop Recommendation for This Location'}
             </button>
           </div>
+
+          {/* Display Recommendation */}
+          {recommendation && (
+            <div className="mt-6 p-6 bg-green-100 rounded-lg shadow-md">
+              <h2 className="text-xl font-semibold text-center mb-4">
+                🌱 Recommended Crops
+              </h2>
+              <p className="text-lg">
+                <strong>🌾 Random Forest:</strong>{' '}
+                {recommendation.RandomForest || 'N/A'}
+              </p>
+              <p className="text-lg">
+                <strong>🌿 Gradient Boosting:</strong>{' '}
+                {recommendation.GradientBoosting || 'N/A'}
+              </p>
+
+              <h2 className="text-xl font-semibold text-center mt-6 mb-4">
+                🧪 Soil Nutrient Levels
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-lg">
+                <p>
+                  <strong>🟡 Nitrogen:</strong>{' '}
+                  {recommendation.Nitrogen || 'N/A'}
+                </p>
+                <p>
+                  <strong>🟠 Phosphorus:</strong>{' '}
+                  {recommendation.Phosphorus || 'N/A'}
+                </p>
+                <p>
+                  <strong>🟢 Potassium:</strong>{' '}
+                  {recommendation.Potassium || 'N/A'}
+                </p>
+                <p>
+                  <strong>🧪 pH Value:</strong>{' '}
+                  {recommendation.PhValue || 'N/A'}
+                </p>
+              </div>
+            </div>
+          )}
+
+          {/* Error Message */}
+          {error && <p className="mt-4 text-red-500 text-center">{error}</p>}
         </div>
       </main>
     </div>

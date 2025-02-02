@@ -68,7 +68,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 
 builder.Services.AddScoped<IUserServices, UserServices>();
 builder.Services.AddScoped<ICourseServices, CourseServices>();
-builder.Services.AddScoped<IMLServices, MLService>();
+builder.Services.AddTransient<IMLServices, MLService>();
 builder.Services.AddScoped<INarcService, NarcService>();
 builder.Services.AddControllers(options =>
         options.Filters.Add<ArgumentExceptionHandler>())

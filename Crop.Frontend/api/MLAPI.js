@@ -6,7 +6,7 @@ function axiosClient() {
 
   // Create Axios instance with token in headers
   return axios.create({
-    baseURL: 'https://localhost:7073/api/courses',
+    baseURL: 'https://localhost:7073/api/ml',
     headers: {
       'Content-Type': 'application/json',
       Accept: 'application/json',
@@ -34,14 +34,37 @@ export async function fetchCourseById(id) {
   return data;
 }
 
-export async function addCourse(courseName, courseDescription) {
-  const response = await axiosClient().post('', {
-    courseName,
-    courseDescription,
+export async function getRecommendation(
+  nitrogen,
+  potassium,
+  phosphorus,
+  temperature,
+  humidity,
+  phValue,
+  rainfall
+) {
+  const response = await axiosClient().post('/getRecommendation', {
+    nitrogen,
+    potassium,
+    phosphorus,
+    temperature,
+    humidity,
+    phValue,
+    rainfall,
   });
   const data = response.data;
   return data;
 }
+
+export async function getRecommendationByLocatoin(latitude, longitude) {
+  const response = await axiosClient().post('/getRecommendationByLocation', {
+    latitude,
+    longitude,
+  });
+  const data = response.data;
+  return data;
+}
+
 export async function updateCourse(course) {
   const response = await axiosClient().put(`/${course.courseId}`, course);
   const data = response.data;

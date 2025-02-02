@@ -1,5 +1,4 @@
-﻿using Crop.Backend.Model;
-using Crop.Backend.Model.DTO;
+﻿using Crop.Backend.Model.DTO;
 using Crop.Backend.Services.MLService;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,7 +9,7 @@ namespace Crop.Backend.Controllers
     public class MLController(IMLServices mlServices) : ControllerBase
     {
         [HttpPost]
-        [Route("~/getRecommendation")]
+        [Route("getRecommendation")]
         public async Task<ActionResult> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationServiceDTO)
         {
             var result = await mlServices.GetCropRecommendation(cropRecommendationServiceDTO);
@@ -26,6 +25,20 @@ namespace Crop.Backend.Controllers
 
                 Latitude = 86.626f,
                 Longitude = 87.873f
+            };
+            var result = await mlServices.GetCropRecommendationByLocation(testModel);
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("getRecommendationByLocation")]
+        public async Task<ActionResult> RecommendationByLocation(CropRecommendationByLocationRequestDTO request)
+        {
+            var testModel = new CropRecommendationByLocationRequestDTO()
+            {
+
+                Latitude = request.Latitude,
+                Longitude = request.Longitude
             };
             var result = await mlServices.GetCropRecommendationByLocation(testModel);
             return Ok(result);

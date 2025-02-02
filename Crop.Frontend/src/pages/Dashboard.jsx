@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { getRecommendation } from '../../api/MLAPI';
 
 function Dashboard() {
   const [location, setLocation] = useState('Kathmandu');
@@ -11,18 +12,31 @@ function Dashboard() {
   const [ph, setPh] = useState('');
   const [temperature, setTemperature] = useState('');
 
-  const handleSubmit = (e) => {
+  const [recommendation, setRecommendation] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log({
-      location,
-      cropType,
-      nitrogen,
-      phosphorus,
-      potassium,
-      rainfall,
-      ph,
-      temperature,
-    });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await getRecommendation(
+        nitrogen,
+        potassium,
+        phosphorus,
+        temperature,
+        50, // Assuming humidity is static or replace it with a state
+        ph,
+        rainfall
+      );
+      setRecommendation(data);
+    } catch (err) {
+      setError('Failed to fetch recommendation.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleReset = () => {
@@ -34,6 +48,8 @@ function Dashboard() {
     setRainfall('');
     setPh('');
     setTemperature('');
+    setRecommendation(null);
+    setError(null);
   };
 
   return (
@@ -48,7 +64,7 @@ function Dashboard() {
             <li>
               <a
                 href="#home"
-                className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300"
+                className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all"
               >
                 Home
               </a>
@@ -56,17 +72,18 @@ function Dashboard() {
             <li>
               <a
                 href="#input"
-                className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300"
+                className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all"
               >
                 Input Data
               </a>
             </li>
             <li>
-              <a className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all duration-300">
-                <Link to="/crop-recommendation">
-                  Location-based Crop Recommendation
-                </Link>
-              </a>
+              <Link
+                to="/crop-recommendation"
+                className="block px-4 py-2 rounded-lg hover:bg-indigo-600 transition-all"
+              >
+                Location-based Crop Recommendation
+              </Link>
             </li>
           </ul>
         </nav>
@@ -74,26 +91,6 @@ function Dashboard() {
 
       {/* Main Content */}
       <main className="ml-64 w-full p-8">
-        {/* Home Section */}
-        <div id="home" className="p-8 bg-white rounded-lg shadow-lg mb-6">
-          <h1 className="text-3xl font-bold text-center text-gray-800 mb-6">
-            Dashboard
-          </h1>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="bg-indigo-100 p-6 rounded-lg shadow-lg hover:bg-indigo-200 transition-all duration-300 ease-in-out">
-              <h2 className="font-semibold text-lg">Weather Overview</h2>
-              <p className="text-gray-700">Current weather: Sunny, 25°C</p>
-              <p className="text-gray-700">Forecast: Rain expected in 2 days</p>
-            </div>
-            <div className="bg-green-100 p-6 rounded-lg shadow-lg hover:bg-green-200 transition-all duration-300 ease-in-out">
-              <h2 className="font-semibold text-lg">Soil Condition</h2>
-              <p className="text-gray-700">pH Level: 6.5</p>
-              <p className="text-gray-700">Moisture: 45%</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Input Data Section */}
         <div id="input" className="p-8 bg-white rounded-lg shadow-lg mb-6">
           <h1 className="text-3xl font-bold text-gray-800 mb-6">Input Data</h1>
           <form id="inputForm" onSubmit={handleSubmit} className="space-y-6">
@@ -104,11 +101,9 @@ function Dashboard() {
                 </label>
                 <input
                   type="number"
-                  id="nitrogen"
-                  name="nitrogen"
                   value={nitrogen}
                   onChange={(e) => setNitrogen(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                  className="mt-2 p-3 border rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
@@ -117,11 +112,9 @@ function Dashboard() {
                 </label>
                 <input
                   type="number"
-                  id="phosphorus"
-                  name="phosphorus"
                   value={phosphorus}
                   onChange={(e) => setPhosphorus(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                  className="mt-2 p-3 border rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -133,11 +126,9 @@ function Dashboard() {
                 </label>
                 <input
                   type="number"
-                  id="potassium"
-                  name="potassium"
                   value={potassium}
                   onChange={(e) => setPotassium(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                  className="mt-2 p-3 border rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
@@ -146,11 +137,9 @@ function Dashboard() {
                 </label>
                 <input
                   type="number"
-                  id="rainfall"
-                  name="rainfall"
                   value={rainfall}
                   onChange={(e) => setRainfall(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                  className="mt-2 p-3 border rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -163,11 +152,9 @@ function Dashboard() {
                 <input
                   type="number"
                   step="0.1"
-                  id="ph"
-                  name="ph"
                   value={ph}
                   onChange={(e) => setPh(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                  className="mt-2 p-3 border rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
               <div>
@@ -176,11 +163,9 @@ function Dashboard() {
                 </label>
                 <input
                   type="number"
-                  id="temperature"
-                  name="temperature"
                   value={temperature}
                   onChange={(e) => setTemperature(e.target.value)}
-                  className="mt-2 p-3 border rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-indigo-500 hover:border-indigo-500 transition-all duration-300"
+                  className="mt-2 p-3 border rounded-lg w-full focus:ring-2 focus:ring-indigo-500"
                 />
               </div>
             </div>
@@ -188,19 +173,40 @@ function Dashboard() {
             <div className="mt-6 flex justify-between">
               <button
                 type="submit"
-                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all duration-300"
+                className="px-6 py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700"
               >
                 Submit
               </button>
               <button
                 type="button"
                 onClick={handleReset}
-                className="px-6 py-3 bg-gray-300 text-black rounded-lg hover:bg-gray-400 transition-all duration-300"
+                className="px-6 py-3 bg-gray-300 text-black rounded-lg hover:bg-gray-400"
               >
                 Reset
               </button>
             </div>
           </form>
+
+          {/* Show Recommendation */}
+          {loading && (
+            <p className="mt-4 text-blue-600">Loading recommendation...</p>
+          )}
+          {error && <p className="mt-4 text-red-600">{error}</p>}
+          {recommendation && (
+            <div className="mt-6 p-4 bg-green-100 border border-green-500 rounded-lg shadow">
+              <h2 className="text-lg font-semibold text-green-700">
+                Recommended Crops:
+              </h2>
+              <p className="text-gray-800">
+                🌱 <strong>Random Forest:</strong>{' '}
+                {recommendation.RandomForestRecommendation}
+              </p>
+              <p className="text-gray-800">
+                🌿 <strong>Gradient Boosting:</strong>{' '}
+                {recommendation.GradientBoostingRecommendation}
+              </p>
+            </div>
+          )}
         </div>
       </main>
     </div>

@@ -92,10 +92,12 @@ namespace Crop.Backend.Services.MLService
             var cropRecommendation = await CropRecommendationService(cropRecommendationRequest);
             var response = new CropRecommendationByLocationResponseDTO()
             {
-                RecommendationMessage = $"Random Forest:{cropRecommendation.RandomForestRecommendation} and " +
-                $"Gradient Boosting:{cropRecommendation.GradientBoostingRecommendation}",
+                RandomForest =  cropRecommendation.RandomForestRecommendation,
+                GradientBoosting = cropRecommendation.GradientBoostingRecommendation,
                 Nitrogen = soilContent.TotalNitrogen,
-                Phosphorus = soilContent.P2O5
+                Phosphorus = soilContent.P2O5,
+                PhValue = soilContent.Ph,
+                Potassium = soilContent.Potassium
             };
 
             return response;

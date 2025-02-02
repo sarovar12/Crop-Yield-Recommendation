@@ -20,8 +20,10 @@ public class CropRecommendationByLocationRequestDTO
 
 public class CropRecommendationByLocationResponseDTO
 {
-    public string RecommendationMessage { get; set; }
+    public string RandomForest { get; set; }
+    public string GradientBoosting { get; set; }
     public string Nitrogen { get; set; }
     public string Phosphorus { get; set; }
-    public string PhValue { get; set; }
+    public string Potassium { get; set; }
+    public float PhValue { get; set; }
 }
