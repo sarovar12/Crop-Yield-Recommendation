@@ -44,6 +44,9 @@ function MapLeaflet({ onMarkerPositionChange }) {
     <Loading />
   ) : (
     <div className="w-3/10 h-2/4 mx-2 px-2">
+      <h2 className="text-xl font-semibold  mb-4">
+        📍 Select a Location on the Map
+      </h2>
       <MapContainer
         ref={mapRef}
         style={{ height: '100%', width: '100%', cursor: 'pointer' }}
