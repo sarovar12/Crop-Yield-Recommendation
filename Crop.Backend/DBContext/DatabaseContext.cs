@@ -10,7 +10,8 @@ namespace Crop.Backend.DBContext
 
         }
         public DbSet<User> Users { get; set; }
-        public DbSet<CourseLesson> Courses { get; set; }
+        public DbSet<Rainfall> RainfallData { get; set;}
+        public DbSet<CropRecommendation> CropRecommendations { get; set; }     
 
 
     }

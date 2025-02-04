@@ -15,11 +15,12 @@ namespace Crop.Backend.Services.MLService
             {
                 // Initialize Python.NET
                 //Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", @"C:\Python311\DLLs\python38.dll");
-                Runtime.PythonDLL = @"C:\Users\ASUS\AppData\Local\Programs\Python\Python313\python313.dll";
-                PythonEngine.Initialize();
+               
 
                 try
                 {
+                    Runtime.PythonDLL = @"C:\Users\ASUS\AppData\Local\Programs\Python\Python313\python313.dll";
+                    PythonEngine.Initialize();
                     using (Py.GIL())
                     {
                         // Load the Python script
