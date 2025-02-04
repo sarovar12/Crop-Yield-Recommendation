@@ -14,6 +14,9 @@ public class CropRecommendationRequestDTO
 
 public class CropRecommendationByLocationRequestDTO
 {
+    public float? Humidity { get; set; }
+    public float? Temperature { get; set; }
+    public float? Rainfall { get; set; }
     public float Latitude { get; set; }
     public float Longitude { get; set; }
 }
@@ -26,4 +29,12 @@ public class CropRecommendationByLocationResponseDTO
     public string Phosphorus { get; set; }
     public string Potassium { get; set; }
     public float PhValue { get; set; }
+}
+
+
+public class SoilParametersByLocation
+{
+    public float Potassium { get; set; }
+    public float Phosphorus { get; set; }
+    public float Nitrogen { get; set; }
 }

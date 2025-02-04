@@ -5,6 +5,7 @@ import Signup from '../pages/Signup';
 import ProtectedRoute from './ProtectedRoute';
 import Dashboard from '../pages/Dashboard';
 import LocationPrediction from './LocationPrediction';
+import CropRecommendations from './CropRecommendation';
 
 function RoutingHandler() {
   return (
@@ -13,6 +14,7 @@ function RoutingHandler() {
         {/* <Route path="/" element={<ProtectedRoute />}> */}
         <Route path="/" element={<Dashboard />} />
         <Route path="/crop-recommendation" element={<LocationPrediction />} />
+        <Route path="/crop-recommendations" element={<CropRecommendations />} />
         {/* </Route> */}
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />

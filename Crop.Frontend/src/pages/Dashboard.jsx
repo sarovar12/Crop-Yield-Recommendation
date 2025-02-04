@@ -4,8 +4,6 @@ import { getRecommendation } from '../../api/MLAPI';
 import { LogOut } from 'lucide-react';
 
 function Dashboard() {
-  const [location, setLocation] = useState('Kathmandu');
-  const [cropType, setCropType] = useState('Sugarcane');
   const [nitrogen, setNitrogen] = useState('');
   const [phosphorus, setPhosphorus] = useState('');
   const [potassium, setPotassium] = useState('');
@@ -99,6 +97,14 @@ function Dashboard() {
                 <span className="ml-2">
                   Location-based Crop Yield Prediction
                 </span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/crop-recommendations"
+                className="flex items-center px-4 py-2 rounded-lg text-[#575b5f] hover:bg-[#3c3c3c] hover:text-white transition-all duration-300"
+              >
+                🌾 <span className="ml-2">Crop Recommendations</span>
               </Link>
             </li>
           </ul>

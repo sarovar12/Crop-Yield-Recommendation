@@ -1,13 +1,13 @@
 ﻿using Crop.Backend.Helper;
 using Crop.Backend.Model;
 using Crop.Backend.Model.DTO;
+using Crop.Backend.Services.CropRecommendationServices;
 using Crop.Backend.Services.NAARCApiService;
 using Python.Runtime;
-using System;
 
 namespace Crop.Backend.Services.MLService
 {
-    public class MLService(INarcService narcService) : IMLServices
+    public class MLService(INarcService narcService, ICropRecommendationServices cropRecommendationServices) : IMLServices
     {
         public async Task<dynamic> CropRecommendationService(CropRecommendationRequestDTO cropRecommendationRequestDTO)
         {
@@ -15,7 +15,7 @@ namespace Crop.Backend.Services.MLService
             {
                 // Initialize Python.NET
                 //Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", @"C:\Python311\DLLs\python38.dll");
-               
+
 
                 try
                 {
@@ -65,6 +65,19 @@ namespace Crop.Backend.Services.MLService
         public async Task<dynamic> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationRequestDTO)
         {
             var result = await CropRecommendationService(cropRecommendationRequestDTO);
+            var cropRecommendationModel = new CropRecommendation()
+            {
+                GradientBoostingRecommendation = result.GradientBoostingRecommendation,
+                RandomForestRecommendation = result.RandomForestRecommendation,
+                Humidity = cropRecommendationRequestDTO.Humidity,
+                Rainfall = cropRecommendationRequestDTO.Rainfall,
+                PhValue = cropRecommendationRequestDTO.PhValue,
+                Temperature = cropRecommendationRequestDTO.Temperature,
+                Potassium = cropRecommendationRequestDTO.Potassium,
+                Phosphorus = cropRecommendationRequestDTO.Phosphorus,
+                Nitrogen = cropRecommendationRequestDTO.Nitrogen,
+            };
+            await cropRecommendationServices.InsertCropRecommendation(cropRecommendationModel);
             return result;
         }
 
@@ -93,7 +106,7 @@ namespace Crop.Backend.Services.MLService
             var cropRecommendation = await CropRecommendationService(cropRecommendationRequest);
             var response = new CropRecommendationByLocationResponseDTO()
             {
-                RandomForest =  cropRecommendation.RandomForestRecommendation,
+                RandomForest = cropRecommendation.RandomForestRecommendation,
                 GradientBoosting = cropRecommendation.GradientBoostingRecommendation,
                 Nitrogen = soilContent.TotalNitrogen,
                 Phosphorus = soilContent.P2O5,
@@ -101,8 +114,22 @@ namespace Crop.Backend.Services.MLService
                 Potassium = soilContent.Potassium
             };
 
+            var cropRecommendationModel = new CropRecommendation()
+            {
+                Latitude = cropRecommendationRequestDTO.Latitude,
+                Longitude = cropRecommendationRequestDTO.Longitude,
+                GradientBoostingRecommendation = cropRecommendation.GradientBoostingRecommendation,
+                RandomForestRecommendation = cropRecommendation.RandomForestRecommendation,
+                Humidity = cropRecommendationRequest.Humidity,
+                Rainfall = cropRecommendationRequest.Rainfall,
+                PhValue = cropRecommendationRequest.PhValue,
+                Temperature = cropRecommendationRequest.Temperature,
+                Potassium = cropRecommendationRequest.Potassium,
+                Phosphorus = cropRecommendationRequest.Phosphorus,
+                Nitrogen = cropRecommendationRequest.Nitrogen,
 
-
+            };
+            await cropRecommendationServices.InsertCropRecommendation(cropRecommendationModel);
             return response;
 
         }

@@ -22,8 +22,8 @@ function getCookie(name) {
   if (parts.length === 2) return parts.pop().split(';').shift();
 }
 
-export async function fetchCourses() {
-  const response = await axiosClient().get();
+export async function fetchRecommendations() {
+  const response = await axiosClient().get('/getRecommendation');
   const data = response.data;
   return data;
 }
@@ -61,6 +61,18 @@ export async function getRecommendationByLocatoin(latitude, longitude) {
     latitude,
     longitude,
   });
+  const data = response.data;
+  return data;
+}
+
+export async function getSoilParametersByLocation(latitude, longitude) {
+  const response = await axiosClient().post(
+    '/test/getRecommendationByLocation',
+    {
+      latitude,
+      longitude,
+    }
+  );
   const data = response.data;
   return data;
 }

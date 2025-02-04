@@ -1,12 +1,15 @@
-﻿using Crop.Backend.Model.DTO;
+﻿using Crop.Backend.Helper;
+using Crop.Backend.Model.DTO;
+using Crop.Backend.Services.CropRecommendationServices;
 using Crop.Backend.Services.MLService;
+using Crop.Backend.Services.NAARCApiService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Crop.Backend.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class MLController(IMLServices mlServices) : ControllerBase
+    public class MLController(IMLServices mlServices, INarcService narcService, ICropRecommendationServices cropRecommendationServices) : ControllerBase
     {
         [HttpPost]
         [Route("getRecommendation")]
@@ -16,18 +19,21 @@ namespace Crop.Backend.Controllers
             return Ok(result);
         }
 
-        [HttpGet]
-        [Route("~/test/getRecommendation")]
-        public async Task<ActionResult> TestRecommendation()
+        [HttpPost]
+        [Route("test/getRecommendation")]
+        public async Task<ActionResult> TestRecommendation(SoilDataRequestModel request)
         {
-            var testModel = new CropRecommendationByLocationRequestDTO()
-            {
+            var soilResponse = await narcService.NarcSoilContentService(request);
+            var (potassium, phosphorus, nitrogen) = NutrientConverterHelper.ConvertNutrients(soilResponse.Potassium,
+                soilResponse.P2O5, soilResponse.TotalNitrogen);
 
-                Latitude = 26.626f,
-                Longitude = 87.873f
+            var response = new SoilParametersByLocation()
+            {
+                Nitrogen = nitrogen,
+                Phosphorus = phosphorus,
+                Potassium = potassium,
             };
-            var result = await mlServices.GetCropRecommendationByLocation(testModel);
-            return Ok(result);
+            return Ok(response);
         }
 
         [HttpPost]
@@ -42,6 +48,21 @@ namespace Crop.Backend.Controllers
             };
             var result = await mlServices.GetCropRecommendationByLocation(testModel);
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("getRecommendation")]
+        public async Task<ActionResult> GetCropRecommendations()
+        {
+            try
+            {
+                var cropRecommendations = await cropRecommendationServices.GetCropRecommendations();
+                return Ok(cropRecommendations);
+            }
+            catch
+            {
+                return BadRequest("Could not process request");
+            }
         }
 
     }
