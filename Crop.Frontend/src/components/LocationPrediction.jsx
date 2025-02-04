@@ -29,6 +29,12 @@ function LocationPrediction() {
 
     const [latitude, longitude] = latLng;
 
+    const handleLogout = () => {
+      // Implement your logout logic here (e.g., clear tokens, redirect)
+      console.log('Logged out!');
+      navigate('/login'); // Example: Redirect to login page
+    };
+
     if (!latitude || !longitude) {
       alert('Invalid location. Please select a valid location on the map.');
       return;
@@ -37,14 +43,24 @@ function LocationPrediction() {
     try {
       setLoading(true);
       setError(null);
-      const data = await getRecommendationByLocatoin(
-        latitude,
-        longitude,
-        rainfall,
-        temperature,
-        humidity
-      );
-      setRecommendation(data);
+
+      // Fetching recommendation from the API
+      const data = await getRecommendationByLocatoin(latitude, longitude);
+
+      // Fetching soil parameters like Rainfall, Temperature, and Humidity
+      const soilParams = await getSoilParametersByLocation(latitude, longitude);
+
+      // Combine both the soil parameters and recommendation data
+      setRecommendation({
+        ...data,
+        rainfall: soilParams.rainfall,
+        temperature: soilParams.temperature,
+        humidity: soilParams.humidity,
+        nitrogen: soilParams.Nitrogen,
+        phosphorus: soilParams.Phosphorus,
+        potassium: soilParams.Potassium,
+        phValue: soilParams.PhValue,
+      });
     } catch (err) {
       setError('Failed to fetch recommendation. Please try again.');
       console.error(err);
@@ -259,14 +275,54 @@ function LocationPrediction() {
               <h2 className="text-xl font-semibold text-center mb-4">
                 🌱 Recommended Crops
               </h2>
-              <p>
+              <p className="text-lg">
                 <strong>🌾 Random Forest:</strong>{' '}
                 {recommendation.RandomForest || 'N/A'}
               </p>
-              <p>
+              <p className="text-lg">
                 <strong>🌿 Gradient Boosting:</strong>{' '}
                 {recommendation.GradientBoosting || 'N/A'}
               </p>
+
+              <h2 className="text-xl font-semibold text-center mt-6 mb-4">
+                🧪 Soil Nutrient Levels
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-lg">
+                <p>
+                  <strong>🟡 Nitrogen:</strong>{' '}
+                  {recommendation.nitrogen || 'N/A'}
+                </p>
+                <p>
+                  <strong>🟠 Phosphorus:</strong>{' '}
+                  {recommendation.phosphorus || 'N/A'}
+                </p>
+                <p>
+                  <strong>🟢 Potassium:</strong>{' '}
+                  {recommendation.potassium || 'N/A'}
+                </p>
+                <p>
+                  <strong>🧪 pH Value:</strong>{' '}
+                  {recommendation.phValue || 'N/A'}
+                </p>
+              </div>
+
+              <h2 className="text-xl font-semibold text-center mt-6 mb-4">
+                🌧️ Weather Conditions
+              </h2>
+              <div className="grid grid-cols-2 gap-4 text-lg">
+                <p>
+                  <strong>🌧️ Rainfall:</strong>{' '}
+                  {recommendation.rainfall || 'N/A'}
+                </p>
+                <p>
+                  <strong>🌡️ Temperature:</strong>{' '}
+                  {recommendation.temperature || 'N/A'}
+                </p>
+                <p>
+                  <strong>💧 Humidity:</strong>{' '}
+                  {recommendation.humidity || 'N/A'}
+                </p>
+              </div>
             </div>
           )}
 

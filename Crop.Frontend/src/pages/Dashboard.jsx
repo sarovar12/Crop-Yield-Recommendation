@@ -147,8 +147,13 @@ function Dashboard() {
               <h2 className="font-semibold text-lg">
                 Most Recent Recommendation
               </h2>
-              <p className="text-gray-700">pH Level: 6.5</p>
-              <p className="text-gray-700">Potassium: 45%</p>
+              <p className="text-gray-700">pH Level: 6</p>
+              <p className="text-gray-700">Potassium: 20</p>
+              <p className="text-gray-700">Phosphorus: 30</p>
+              <p className="text-gray-700">Nitrogen: 40</p>
+              <p className="text-gray-700">Rainfall: 50</p>
+              <p className="text-gray-700">Temperature: 25°C</p>
+              <p className="text-gray-700">Humidity: 70%</p>
             </div>
           </div>
         </div>
