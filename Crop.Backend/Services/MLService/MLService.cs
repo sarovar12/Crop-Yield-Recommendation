@@ -98,9 +98,9 @@ namespace Crop.Backend.Services.MLService
                 Phosphorus = phosphorus,
                 Potassium = potassium,
                 PhValue = soilContent.Ph,
-                Humidity = 60.0f,
-                Temperature = 20.9f,
-                Rainfall = 200.9f
+                Humidity = cropRecommendationRequestDTO.Humidity,
+                Temperature = cropRecommendationRequestDTO.Temperature,
+                Rainfall = cropRecommendationRequestDTO.Rainfall
             };
 
             var cropRecommendation = await CropRecommendationService(cropRecommendationRequest);

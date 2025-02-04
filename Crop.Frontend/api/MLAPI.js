@@ -56,23 +56,29 @@ export async function getRecommendation(
   return data;
 }
 
-export async function getRecommendationByLocatoin(latitude, longitude) {
+export async function getRecommendationByLocatoin(
+  latitude,
+  longitude,
+  rainfall,
+  humidity,
+  temperature
+) {
   const response = await axiosClient().post('/getRecommendationByLocation', {
     latitude,
     longitude,
+    rainfall,
+    humidity,
+    temperature,
   });
   const data = response.data;
   return data;
 }
 
 export async function getSoilParametersByLocation(latitude, longitude) {
-  const response = await axiosClient().post(
-    '/test/getRecommendationByLocation',
-    {
-      latitude,
-      longitude,
-    }
-  );
+  const response = await axiosClient().post('/test/getRecommendation', {
+    latitude,
+    longitude,
+  });
   const data = response.data;
   return data;
 }

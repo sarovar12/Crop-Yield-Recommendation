@@ -14,9 +14,9 @@ public class CropRecommendationRequestDTO
 
 public class CropRecommendationByLocationRequestDTO
 {
-    public float? Humidity { get; set; }
-    public float? Temperature { get; set; }
-    public float? Rainfall { get; set; }
+    public float Humidity { get; set; }
+    public float Temperature { get; set; }
+    public float Rainfall { get; set; }
     public float Latitude { get; set; }
     public float Longitude { get; set; }
 }
