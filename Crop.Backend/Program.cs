@@ -1,6 +1,6 @@
 using Crop.Backend.DBContext;
 using Crop.Backend.Filters;
-//using Crop.Backend.Services.CourseServices;
+using Crop.Backend.Services.CropRecommendationServices;
 using Crop.Backend.Services.MLService;
 using Crop.Backend.Services.NAARCApiService;
 using Crop.Backend.Services.UserServices;
@@ -67,7 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 builder.Services.AddScoped<IUserServices, UserServices>();
-//builder.Services.AddScoped<ICourseServices, CourseServices>();
+builder.Services.AddScoped<ICropRecommendationServices, CropRecommendationServices>();
 builder.Services.AddTransient<IMLServices, MLService>();
 builder.Services.AddScoped<INarcService, NarcService>();
 builder.Services.AddControllers(options =>

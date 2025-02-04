@@ -17,6 +17,7 @@ namespace Crop.Backend.Model
         public float Phosphorus { get; set; }
         public float Potassium { get; set; }
         public float PhValue { get; set; }
-        public string Recommendation { get; set; }
+        public string RandomForestRecommendation { get; set; }
+        public string GradientBoostingRecommendation { get; set; }
     }
 }

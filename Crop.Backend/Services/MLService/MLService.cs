@@ -101,6 +101,8 @@ namespace Crop.Backend.Services.MLService
                 Potassium = soilContent.Potassium
             };
 
+
+
             return response;
 
         }
