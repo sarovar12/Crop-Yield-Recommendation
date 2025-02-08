@@ -32,6 +32,8 @@ namespace Crop.Backend.Controllers
                 Nitrogen = nitrogen,
                 Phosphorus = phosphorus,
                 Potassium = potassium,
+                PhValue = soilResponse.Ph
+                
             };
             return Ok(response);
         }
@@ -44,7 +46,11 @@ namespace Crop.Backend.Controllers
             {
 
                 Latitude = request.Latitude,
-                Longitude = request.Longitude
+                Longitude = request.Longitude,
+                Humidity = request.Humidity,
+                Rainfall = request.Rainfall,
+                Temperature= request.Temperature
+                
             };
             var result = await mlServices.GetCropRecommendationByLocation(testModel);
             return Ok(result);

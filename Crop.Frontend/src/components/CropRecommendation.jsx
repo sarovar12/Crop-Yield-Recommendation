@@ -56,7 +56,10 @@ function CropRecommendations() {
                 to="/input-data"
                 className="flex items-center px-4 py-2 rounded-lg text-[#575b5f] hover:bg-[#3c3c3c] hover:text-white transition-all duration-300"
               >
-                📋 <span className="ml-2">Input Data</span>
+                📋{' '}
+                <span className="ml-2">
+                  Parameter based Crop Recommendation
+                </span>
               </Link>
             </li>
             <li>
@@ -65,9 +68,7 @@ function CropRecommendations() {
                 className="flex items-center px-4 py-2 rounded-lg text-[#575b5f] hover:bg-[#3c3c3c] hover:text-white transition-all duration-300"
               >
                 🌍{' '}
-                <span className="ml-2">
-                  Location-based Crop Yield Prediction
-                </span>
+                <span className="ml-2">Location-based Crop Recommendation</span>
               </Link>
             </li>
             <li>

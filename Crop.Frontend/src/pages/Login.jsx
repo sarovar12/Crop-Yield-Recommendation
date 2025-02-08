@@ -21,13 +21,14 @@ function Login() {
     try {
       const token = await LoginUser(email, password);
       console.log(token);
-      if (token.succeed) {
+      if (token.Succeed) {
         Cookies.set('LoginUser', token.data);
         console.log(token.data);
         navigate('/');
         toast.success('User Logged in Successfully');
       } else {
-        setError(token.error); // Ensure `token.error` exists in failed responses.
+        toast.error(token.Error);
+        setError(token.error);
       }
     } catch (err) {
       console.error('Login failed:', err);

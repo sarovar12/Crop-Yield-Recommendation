@@ -28,5 +28,26 @@ namespace Crop.Backend.Services.CropRecommendationServices
 
 
         }
+
+        public async Task<(int count, CropRecommendation mostRecentRecommendation)> GetDashboard()
+        {
+            try
+            {
+                int count = await db.CropRecommendations.CountAsync();
+                var mostRecentRecommendation = await db.CropRecommendations
+                    .OrderByDescending(r => r.Id)  // Ensure you're ordering by the date property
+                    .FirstOrDefaultAsync();
+
+                return (count, mostRecentRecommendation);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return (0, null);  // Return default values if an exception occurs
+            }
+        }
+
+
+
     }
 }

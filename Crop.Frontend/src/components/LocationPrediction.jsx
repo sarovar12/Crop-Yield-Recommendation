@@ -45,7 +45,13 @@ function LocationPrediction() {
       setError(null);
 
       // Fetching recommendation from the API
-      const data = await getRecommendationByLocatoin(latitude, longitude);
+      const data = await getRecommendationByLocatoin(
+        latitude,
+        longitude,
+        rainfall,
+        humidity,
+        temperature
+      );
 
       // Fetching soil parameters like Rainfall, Temperature, and Humidity
       const soilParams = await getSoilParametersByLocation(latitude, longitude);
@@ -123,7 +129,10 @@ function LocationPrediction() {
                 to="/"
                 className="flex items-center px-4 py-2 rounded-lg text-[#575b5f] hover:bg-[#3c3c3c] hover:text-white transition-all duration-300"
               >
-                📋 <span className="ml-2">Input Data</span>
+                📋{' '}
+                <span className="ml-2">
+                  Parameter based Crop Recommendation
+                </span>
               </Link>
             </li>
             <li>
@@ -132,9 +141,7 @@ function LocationPrediction() {
                 className="flex items-center px-4 py-2 rounded-lg text-[#575b5f] hover:bg-[#3c3c3c] hover:text-white transition-all duration-300"
               >
                 🌍{' '}
-                <span className="ml-2">
-                  Location-based Crop Yield Prediction
-                </span>
+                <span className="ml-2">Location-based Crop Recommendation</span>
               </Link>
             </li>
             <li>
@@ -199,6 +206,9 @@ function LocationPrediction() {
                 </p>
                 <p>
                   <strong>🟢 Potassium:</strong> {soilParameters.Potassium}
+                </p>
+                <p>
+                  <strong> 🧪 Ph Value:</strong> {soilParameters.PhValue}
                 </p>
               </div>
             </div>
@@ -306,23 +316,23 @@ function LocationPrediction() {
                 </p>
               </div>
 
-              <h2 className="text-xl font-semibold text-center mt-6 mb-4">
+              {/* <h2 className="text-xl font-semibold text-center mt-6 mb-4">
                 🌧️ Weather Conditions
               </h2>
               <div className="grid grid-cols-2 gap-4 text-lg">
                 <p>
                   <strong>🌧️ Rainfall:</strong>{' '}
-                  {recommendation.rainfall || 'N/A'}
+                  {recommendation.rainfall || '100'} mm
                 </p>
                 <p>
                   <strong>🌡️ Temperature:</strong>{' '}
-                  {recommendation.temperature || 'N/A'}
+                  {recommendation.temperature || '30'} °C
                 </p>
                 <p>
                   <strong>💧 Humidity:</strong>{' '}
-                  {recommendation.humidity || 'N/A'}
+                  {recommendation.humidity || '32'} %
                 </p>
-              </div>
+              </div> */}
             </div>
           )}
 

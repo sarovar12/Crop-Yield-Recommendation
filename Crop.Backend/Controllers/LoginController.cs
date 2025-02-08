@@ -1,5 +1,7 @@
 ﻿using Crop.Backend.Model;
 using Crop.Backend.Model.DTO;
+using Crop.Backend.Services.CropRecommendationServices;
+using Crop.Backend.Services.MLService;
 using Crop.Backend.Services.UserServices;
 using Microsoft.AspNetCore.Mvc;
 using static Crop.Backend.Helper.Common;
@@ -8,19 +10,13 @@ namespace Crop.Backend.Controllers
 {
     [ApiController]
 
-    public class LoginController : ControllerBase
+    public class LoginController(IUserServices userServices, ICropRecommendationServices cropRecommendationServices) : ControllerBase
     {
-        private readonly IUserServices _userServices;
-        public LoginController(IUserServices userServices)
-        {
-            _userServices = userServices;
-
-        }
         [HttpPost]
         [Route("~/api/login")]
         public async Task<ActionResult> Login([FromBody] LoginRequestDTO loginRequestDTO)
         {
-            var user = await _userServices.Login(loginRequestDTO);
+            var user = await userServices.Login(loginRequestDTO);
             var serviceResult = new ServiceResult();
             if (user.Succeed == false)
             {
@@ -41,7 +37,7 @@ namespace Crop.Backend.Controllers
         [Route("~/api/register")]
         public async Task<ActionResult> Register(User user)
         {
-            bool status = await _userServices.Register(user);
+            bool status = await userServices.Register(user);
             if (status == false)
             {
                 return NotFound();
@@ -51,6 +47,19 @@ namespace Crop.Backend.Controllers
                 return Ok("User Created Successfully, You can now login!!!");
             }
 
+        }
+
+        [HttpGet]
+        [Route("~/api/ml/dashboard")]
+        public async Task<ActionResult<DashboardResponse>> DashBoard()
+        {
+            var list = await cropRecommendationServices.GetDashboard();
+            var sarovar = new DashboardResponse()
+            {
+                Count = list.count,
+                MostRecentRecommendation = list.mostRecentRecommendation
+            };
+            return Ok(sarovar);
         }
     }
 }

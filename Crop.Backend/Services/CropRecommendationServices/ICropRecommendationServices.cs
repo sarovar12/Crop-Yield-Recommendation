@@ -6,5 +6,6 @@ namespace Crop.Backend.Services.CropRecommendationServices
     {
         Task<List<CropRecommendation>> GetCropRecommendations();
         Task<bool> InsertCropRecommendation(CropRecommendation cropRecommendation);
+        Task<(int count, CropRecommendation mostRecentRecommendation)> GetDashboard();
     }
 }

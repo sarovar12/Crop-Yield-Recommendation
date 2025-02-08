@@ -94,3 +94,10 @@ export async function deleteCourse(courseId) {
   const data = response.data;
   return data;
 }
+
+
+export async function dashboard() {
+  const response = await axiosClient().get('/dashboard');
+  const data = response.data;
+  return data;
+}

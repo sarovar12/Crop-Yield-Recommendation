@@ -111,7 +111,10 @@ namespace Crop.Backend.Services.MLService
                 Nitrogen = soilContent.TotalNitrogen,
                 Phosphorus = soilContent.P2O5,
                 PhValue = soilContent.Ph,
-                Potassium = soilContent.Potassium
+                Potassium = soilContent.Potassium,
+                Temperature = cropRecommendationRequestDTO.Temperature,
+                Humidity = cropRecommendationRequestDTO.Humidity,
+                Rainfall = cropRecommendationRequestDTO.Rainfall,
             };
 
             var cropRecommendationModel = new CropRecommendation()

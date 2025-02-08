@@ -26,19 +26,3 @@ def recommend_crop(parameters):
         "Random Forest Recommendation": rf_recommendation,
         "Gradient Boosting Recommendation": gb_recommendation
     }
-
-if __name__ == "__main__":
-    # Example usage
-    user_input = {
-        'N': 90,
-        'P': 42,
-        'K': 43,
-        'temperature': 20.8,
-        'humidity': 82.0,
-        'ph': 6.5,
-        'rainfall': 200.9
-    }
-    recommendation = recommend_crop(user_input)
-    print("\nCrop Recommendation:")
-    print("Random Forest:", recommendation["Random Forest Recommendation"])
-    print("Gradient Boosting:", recommendation["Gradient Boosting Recommendation"])
