@@ -207,19 +207,19 @@ function Dashboard() {
                     Model Predictions
                   </h3>
                   <p className="text-gray-700">
-                    Random Forest:{' '}
+                    Recommended Crops:{' '}
                     {
                       dashboardData?.MostRecentRecommendation
                         .RandomForestRecommendation
                     }
                   </p>
-                  <p className="text-gray-700">
+                  {/* <p className="text-gray-700">
                     Gradient Boosting:{' '}
                     {
                       dashboardData?.MostRecentRecommendation
                         .GradientBoostingRecommendation
                     }
-                  </p>
+                  </p> */}
                 </div>
               </div>
             </div>
@@ -372,13 +372,13 @@ function Dashboard() {
                 Recommended Crops:
               </h2>
               <p className="text-gray-800">
-                🌱 <strong>Random Forest:</strong>{' '}
-                {recommendation.RandomForestRecommendation}
+                🌱 <strong>Recommended Crops:</strong>{' '}
+                {recommendation.recommended_crops_string}
               </p>
-              <p className="text-gray-800">
+              {/* <p className="text-gray-800">
                 🌿 <strong>Gradient Boosting:</strong>{' '}
                 {recommendation.GradientBoostingRecommendation}
-              </p>
+              </p> */}
             </div>
           )}
         </div>

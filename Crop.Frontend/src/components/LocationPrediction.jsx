@@ -286,13 +286,13 @@ function LocationPrediction() {
                 🌱 Recommended Crops
               </h2>
               <p className="text-lg">
-                <strong>🌾 Random Forest:</strong>{' '}
+                <strong>🌾 Recommended Crops:</strong>{' '}
                 {recommendation.RandomForest || 'N/A'}
               </p>
-              <p className="text-lg">
+              {/* <p className="text-lg">
                 <strong>🌿 Gradient Boosting:</strong>{' '}
                 {recommendation.GradientBoosting || 'N/A'}
-              </p>
+              </p> */}
 
               <h2 className="text-xl font-semibold text-center mt-6 mb-4">
                 🧪 Soil Nutrient Levels

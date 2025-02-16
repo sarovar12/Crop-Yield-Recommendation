@@ -52,7 +52,7 @@ function Login() {
       {/* Right side - Login form */}
       <div className="w-1/2 bg-white shadow-lg rounded-lg p-8 mt-4 flex flex-col justify-center items-center">
         <h1 className="text-3xl text-center mt-6 font-bold text-green-700">
-          Welcome to Crop Yield Recommendation System
+          Welcome to Crop Recommendation System
         </h1>
         <h2 className="text-2xl text-center text-gray-700 mt-4 mb-8">
           Sign In

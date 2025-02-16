@@ -110,8 +110,8 @@ function CropRecommendations() {
                 <thead className="sticky top-0 bg-gray-200 z-10">
                   <tr className="text-gray-700">
                     <th className="px-4 py-2">ID</th>
-                    <th className="px-4 py-2">Random Forest</th>
-                    <th className="px-4 py-2">Gradient Boosting</th>
+                    <th className="px-4 py-2">Crop Recommendation</th>
+                    {/* <th className="px-4 py-2">Gradient Boosting</th> */}
                     <th className="px-4 py-2">Rainfall</th>
                     <th className="px-4 py-2">Humidity</th>
                     <th className="px-4 py-2">Temperature</th>
@@ -131,12 +131,12 @@ function CropRecommendations() {
                         ).toUpperCase() +
                           rec.RandomForestRecommendation.slice(1)}
                       </td>
-                      <td className="px-4 py-2 text-center">
+                      {/* <td className="px-4 py-2 text-center">
                         {rec.GradientBoostingRecommendation.charAt(
                           0
                         ).toUpperCase() +
                           rec.GradientBoostingRecommendation.slice(1)}
-                      </td>
+                      </td> */}
                       <td className="px-4 py-2 text-center">{rec.Rainfall}</td>
                       <td className="px-4 py-2 text-center">{rec.Humidity}</td>
                       <td className="px-4 py-2 text-center">

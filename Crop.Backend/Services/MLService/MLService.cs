@@ -3,63 +3,100 @@ using Crop.Backend.Model;
 using Crop.Backend.Model.DTO;
 using Crop.Backend.Services.CropRecommendationServices;
 using Crop.Backend.Services.NAARCApiService;
-using Python.Runtime;
+using Newtonsoft.Json;
+using System.Text;
 
 namespace Crop.Backend.Services.MLService
 {
     public class MLService(INarcService narcService, ICropRecommendationServices cropRecommendationServices) : IMLServices
     {
-        public async Task<dynamic> CropRecommendationService(CropRecommendationRequestDTO cropRecommendationRequestDTO)
+        public async Task<CropRecommendationResponseModel> CropRecommendationService(CropRecommendationRequestDTO cropRecommendationRequestDTO)
         {
-            return await Task.Run(() =>
+            //return await Task.Run(() =>
+            //{
+            //    // Initialize Python.NET
+            //    //Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", @"C:\Python311\DLLs\python38.dll");
+
+
+            //    //try
+            //    //{
+            //    //    Runtime.PythonDLL = @"C:\Users\ASUS\AppData\Local\Programs\Python\Python313\python313.dll";
+            //    //    PythonEngine.Initialize();
+            //    //    using (Py.GIL())
+            //    //    {
+            //    //        // Load the Python script
+            //    //        dynamic sys = Py.Import("sys");
+            //    //        //dynamic pd = Py.Import("pandas");
+            //    //        Console.WriteLine("Python version: " + sys.version);
+            //    //        // Add the directory containing the Python script to sys.path
+            //    //        sys.path.append(@"D:\ProjectsB\CropYieldRecommendation\Crop.Backend\Services\MLService");
+            //    //        dynamic py = Py.Import("crop_recommendation");
+
+            //    //        // Create a dictionary for input parameters
+            //    //        var parameters = new PyDict
+            //    //        {
+            //    //            ["N"] = new PyFloat(cropRecommendationRequestDTO.Nitrogen),
+            //    //            ["P"] = new PyFloat(cropRecommendationRequestDTO.Phosphorus),
+            //    //            ["K"] = new PyFloat(cropRecommendationRequestDTO.Potassium),
+            //    //            ["temperature"] = new PyFloat(cropRecommendationRequestDTO.Temperature),
+            //    //            ["humidity"] = new PyFloat(cropRecommendationRequestDTO.Humidity),
+            //    //            ["ph"] = new PyFloat(cropRecommendationRequestDTO.PhValue),
+            //    //            ["rainfall"] = new PyFloat(cropRecommendationRequestDTO.Rainfall)
+            //    //        };
+
+            //    //        // Call the Python function recommend_crop
+            //    //        dynamic recommendation = py.recommend_crop(parameters);
+
+            //    //        // Prepare the result
+            //    //        return new
+            //    //        {
+            //    //            RandomForestRecommendation = recommendation["Random Forest Recommendation"].ToString(),
+            //    //            GradientBoostingRecommendation = recommendation["Gradient Boosting Recommendation"].ToString()
+            //    //        };
+            //    //    }
+            //    //}
+            //    //catch (Exception ex)
+            //    //{
+            //    //    throw new ArgumentException($"Error calling Python script: {ex.Message}");
+            //    //}
+            //});
+
+            var url = "http://127.0.0.1:5000/predict";
+
+            using (var client = new HttpClient())
             {
-                // Initialize Python.NET
-                //Environment.SetEnvironmentVariable("PYTHONNET_PYDLL", @"C:\Python311\DLLs\python38.dll");
-
-
                 try
                 {
-                    Runtime.PythonDLL = @"C:\Users\ASUS\AppData\Local\Programs\Python\Python313\python313.dll";
-                    PythonEngine.Initialize();
-                    using (Py.GIL())
+
+                    var requestData = new
                     {
-                        // Load the Python script
-                        dynamic sys = Py.Import("sys");
-                        //dynamic pd = Py.Import("pandas");
-                        Console.WriteLine("Python version: " + sys.version);
-                        // Add the directory containing the Python script to sys.path
-                        sys.path.append(@"D:\ProjectsB\CropYieldRecommendation\Crop.Backend\Services\MLService");
-                        dynamic py = Py.Import("crop_recommendation");
+                        N = cropRecommendationRequestDTO.Nitrogen,
+                        P = cropRecommendationRequestDTO.Phosphorus,
+                        K = cropRecommendationRequestDTO.Potassium,
+                        temperature = cropRecommendationRequestDTO.Temperature,
+                        humidity = cropRecommendationRequestDTO.Humidity,
+                        ph = cropRecommendationRequestDTO.PhValue,
+                        rainfall = cropRecommendationRequestDTO.Rainfall
+                    };
 
-                        // Create a dictionary for input parameters
-                        var parameters = new PyDict
-                        {
-                            ["N"] = new PyFloat(cropRecommendationRequestDTO.Nitrogen),
-                            ["P"] = new PyFloat(cropRecommendationRequestDTO.Phosphorus),
-                            ["K"] = new PyFloat(cropRecommendationRequestDTO.Potassium),
-                            ["temperature"] = new PyFloat(cropRecommendationRequestDTO.Temperature),
-                            ["humidity"] = new PyFloat(cropRecommendationRequestDTO.Humidity),
-                            ["ph"] = new PyFloat(cropRecommendationRequestDTO.PhValue),
-                            ["rainfall"] = new PyFloat(cropRecommendationRequestDTO.Rainfall)
-                        };
+                    var jsonRequest = JsonConvert.SerializeObject(requestData);
+                    var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
+                    // Send the GET request
+                    var response = await client.PostAsync(url, content);
+                    response.EnsureSuccessStatusCode();
 
-                        // Call the Python function recommend_crop
-                        dynamic recommendation = py.recommend_crop(parameters);
+                    var json = await response.Content.ReadAsStringAsync();
+                    var soilDataResponse = JsonConvert.DeserializeObject<CropRecommendationResponseModel>(json);
+                    return soilDataResponse;
 
-                        // Prepare the result
-                        return new
-                        {
-                            RandomForestRecommendation = recommendation["Random Forest Recommendation"].ToString(),
-                            GradientBoostingRecommendation = recommendation["Gradient Boosting Recommendation"].ToString()
-                        };
-                    }
+                    //var result = JsonConvert.DeserializeObject<SoilDataResponseModel>(soilDataResponse.Result);
+
                 }
                 catch (Exception ex)
                 {
-                    throw new ArgumentException($"Error calling Python script: {ex.Message}");
+                    throw new ArgumentException("An error occurred: " + ex.Message);
                 }
-
-            });
+            }
         }
 
         public async Task<dynamic> GetCropRecommendation(CropRecommendationRequestDTO cropRecommendationRequestDTO)
@@ -67,8 +104,8 @@ namespace Crop.Backend.Services.MLService
             var result = await CropRecommendationService(cropRecommendationRequestDTO);
             var cropRecommendationModel = new CropRecommendation()
             {
-                GradientBoostingRecommendation = result.GradientBoostingRecommendation,
-                RandomForestRecommendation = result.RandomForestRecommendation,
+                GradientBoostingRecommendation = "test",
+                RandomForestRecommendation = result.recommended_crops_string,
                 Humidity = cropRecommendationRequestDTO.Humidity,
                 Rainfall = cropRecommendationRequestDTO.Rainfall,
                 PhValue = cropRecommendationRequestDTO.PhValue,
@@ -106,8 +143,8 @@ namespace Crop.Backend.Services.MLService
             var cropRecommendation = await CropRecommendationService(cropRecommendationRequest);
             var response = new CropRecommendationByLocationResponseDTO()
             {
-                RandomForest = cropRecommendation.RandomForestRecommendation,
-                GradientBoosting = cropRecommendation.GradientBoostingRecommendation,
+                RandomForest = cropRecommendation.recommended_crops_string,
+                GradientBoosting = "test",
                 Nitrogen = soilContent.TotalNitrogen,
                 Phosphorus = soilContent.P2O5,
                 PhValue = soilContent.Ph,
@@ -121,8 +158,8 @@ namespace Crop.Backend.Services.MLService
             {
                 Latitude = cropRecommendationRequestDTO.Latitude,
                 Longitude = cropRecommendationRequestDTO.Longitude,
-                GradientBoostingRecommendation = cropRecommendation.GradientBoostingRecommendation,
-                RandomForestRecommendation = cropRecommendation.RandomForestRecommendation,
+                GradientBoostingRecommendation = "test",
+                RandomForestRecommendation = cropRecommendation.recommended_crops_string,
                 Humidity = cropRecommendationRequest.Humidity,
                 Rainfall = cropRecommendationRequest.Rainfall,
                 PhValue = cropRecommendationRequest.PhValue,

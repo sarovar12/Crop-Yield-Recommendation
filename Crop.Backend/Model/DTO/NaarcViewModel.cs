@@ -53,3 +53,15 @@ public class Coord
     public double Lat { get; set; }
 }
 
+public class CropRecommendationResponseModel
+{
+    public bool success { get; set; }
+    public List<CropRecommendationModel> top_5_crops { get; set; }
+    public string recommended_crops_string { get; set; }
+}
+
+public class CropRecommendationModel
+{
+    public string crop { get; set; }
+    public string similarity { get; set; }
+}

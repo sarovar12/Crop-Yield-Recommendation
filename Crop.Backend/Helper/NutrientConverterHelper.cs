@@ -18,12 +18,13 @@
             float pToP2O5 = 0.218f;
 
             // Convert K2O to Potassium (K) in kg/ha
-            float potassium = k2oKgHa * kToK2O;
+            //float potassium = k2oKgHa * kToK2O;
+            float potassium = k2oKgHa * 1.0f;
 
             // Convert P2O5 to Phosphorus (P) in kg/ha
             float phosphorus = p2o5KgHa * pToP2O5;
 
-            float nitrogen = nitrogenPercentage * 1000;
+            float nitrogen = nitrogenPercentage * 1000 *100;
 
             return (potassium, phosphorus, nitrogen);
         }
