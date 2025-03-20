@@ -31,6 +31,8 @@
             return (potassium, phosphorus, nitrogen);
         }
 
+
+
         private static float ParseValue(string input)
         {
             // Remove any non-numeric characters (such as 'kg/ha', '%', etc.) and parse the numeric value
