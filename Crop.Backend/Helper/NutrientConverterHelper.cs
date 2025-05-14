@@ -21,6 +21,8 @@
             //float potassium = k2oKgHa * kToK2O;
             float potassium = k2oKgHa * 1.0f;
 
+
+
             // Convert P2O5 to Phosphorus (P) in kg/ha
             float phosphorus = p2o5KgHa * pToP2O5;
 
