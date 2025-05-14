@@ -40,7 +40,6 @@
             return float.Parse(numericValue);
         }
 
-        // Helper method to parse percentage values like "0.12 %"
         private static float ParsePercentage(string input)
         {
             string numericValue = new string(input.Where(c => Char.IsDigit(c) || c == '.').ToArray());
